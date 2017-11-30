@@ -54,6 +54,7 @@ int main(int argc, char **argv)
 //    logger.addDestination(functorDestination);
 
     auto *client = createClient();
+    client->acquireToken();
 
 //    MainWidget mainWindow;
 //    mainWindow.showFullScreen();

@@ -87,7 +87,9 @@ void Client::acquireToken(const QString &username, const QString &password)
     request.setRawHeader("Accept", "application/json, text/javascript, */*; q=0.01");
     request.setRawHeader("Content-Type", "application/json; charset=utf-8");
 
-    post(request, payload);
+    QNetworkRequest req = prepareRequest(request);
+    dumpRequestInfo("POST", req);
+    prepareReply(m_qnam.post(req, QJsonDocument(payload).toJson()));
 }
 
 void Client::requestFinished()

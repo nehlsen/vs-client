@@ -49,5 +49,7 @@ JwtToken JwtToken::fromJsonObject(const QJsonObject &jsonObject, int lifetime)
     token.m_created = QDateTime::currentDateTime();
     token.m_token = jsonObject.value(QLatin1String("token")).toString();
 
+    QLOG_INFO() << "Token created - token will expire in" << token.lifetimeRemaining() << "seconds";
+
     return token;
 }
