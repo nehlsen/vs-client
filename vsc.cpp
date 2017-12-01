@@ -3,7 +3,6 @@
 #include <QtCore/QSettings>
 #include <Client/Client.h>
 #include "QsLog/QsLog.h"
-#include "QsLog/QsLogDest.h"
 
 using namespace QsLogging;
 
@@ -55,6 +54,12 @@ int main(int argc, char **argv)
 
     auto *client = createClient();
     client->acquireToken();
+    QObject::connect(
+            client,
+            &Client::acquireTokenSucceed,
+            [=]() { client->getVenue(3); }
+    );
+//    client->getVenue(3);
 
 //    MainWidget mainWindow;
 //    mainWindow.showFullScreen();

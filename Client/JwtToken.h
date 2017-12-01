@@ -8,6 +8,7 @@
 class JwtToken
 {
 public:
+    JwtToken();
     explicit JwtToken(int lifetime);
 
     QString token() const;

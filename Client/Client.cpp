@@ -6,31 +6,19 @@
 #include <QtCore/QJsonObject>
 #include "Client.h"
 
-#define DEV_MODE_PREFIX "/app_dev.php"
-
-namespace Url
-{
-const QLatin1String AcquireToken(DEV_MODE_PREFIX "/api/login_check");
-const QLatin1String RelativeApiBase(DEV_MODE_PREFIX "/api/v1");
-const QLatin1String GetPictures("/pictures");
-const QLatin1String GetPicture("/picture/ID");
-const QLatin1String PostPicture("/pictures");
-}
-
 Client::Client(QObject *parent):
     QObject(parent),
-    m_autoRefreshEnabled(true),
-    m_token(-1)
+    m_autoRefreshEnabled(true)
 {
     QLOG_TRACE() << "Client::Client";
 }
 
-void Client::setServer(const QUrl &server)
+void Client::setServer(const QString &server)
 {
     m_server = server;
 }
 
-QUrl Client::server() const
+QString Client::server() const
 {
     return m_server;
 }
@@ -70,6 +58,14 @@ JwtToken Client::token() const
     return m_token;
 }
 
+void Client::getVenue(int id)
+{
+    QLOG_TRACE() << "Client::getVenue(" << id << ")";
+
+    m_endpointGetVenue.setRequestParameters(server(), QStringList() << QString::number(id));
+    get(addAuthHeader(m_endpointGetVenue.createRequest()));
+}
+
 void Client::acquireToken()
 {
     acquireToken(username(), password());
@@ -79,17 +75,8 @@ void Client::acquireToken(const QString &username, const QString &password)
 {
     QLOG_TRACE() << "Client::acquireToken";
 
-    QJsonObject payload;
-    payload["_username"] = username;
-    payload["_password"] = password;
-
-    QNetworkRequest request = QNetworkRequest(createUrl(Url::AcquireToken));
-    request.setRawHeader("Accept", "application/json, text/javascript, */*; q=0.01");
-    request.setRawHeader("Content-Type", "application/json; charset=utf-8");
-
-    QNetworkRequest req = prepareRequest(request);
-    dumpRequestInfo("POST", req);
-    prepareReply(m_qnam.post(req, QJsonDocument(payload).toJson()));
+    m_endpointAcquireToken.setRequestParameters(server(), QStringList() << username << password);
+    post(m_endpointAcquireToken.createRequest(), m_endpointAcquireToken.payload());
 }
 
 void Client::requestFinished()
@@ -102,8 +89,9 @@ void Client::requestFinished()
     }
 
     const int httpStatusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+    const QUrl &requestUrl = reply->request().url();
 
-    QLOG_INFO() << reply->request().url().toString()
+    QLOG_INFO() << requestUrl.toString()
                 << httpStatusCode
                 << reply->attribute(QNetworkRequest::HttpReasonPhraseAttribute).toString();
 
@@ -112,14 +100,14 @@ void Client::requestFinished()
     }
 
     const QByteArray responseBody = reply->readAll();
-    const QString path = extractPath(reply->request().url());
+    QLOG_TRACE() << responseBody;
 
-    if (path == Url::AcquireToken) {
-        handleAcquireTokenResponse(httpStatusCode, responseBody);
-    } /*else if (path == Url::Test) {
-        handleTestResponse(httpStatusCode, responseBody);
-    }*/ else {
-        QLOG_TRACE() << responseBody;
+    if (m_endpointAcquireToken.isMatch(requestUrl)) {
+        m_endpointAcquireToken.parseResponse(httpStatusCode, responseBody);
+        setToken(m_endpointAcquireToken.token());
+    } else if (m_endpointGetVenue.isMatch(requestUrl)) {
+        m_endpointGetVenue.parseResponse(httpStatusCode, responseBody);
+//        setVenue(m_endpointGetVenue.venue());
     }
 }
 
@@ -137,39 +125,12 @@ void Client::setToken(JwtToken token)
 {
     m_token = token;
     emit tokenChanged(m_token);
-}
 
-QUrl Client::createUrl(const QString &path) const
-{
-    // https://stage1.miofair.de/oauth/v2/token
-    // https://stage1.miofair.de/api/v2/xxx
-
-    QString basePath;
-    if (!path.startsWith('/')) {
-        // relative path, prepend "/api/v2/"
-        basePath = m_server.path();
-        if (!basePath.endsWith('/')) {
-            basePath += '/';
-        }
-        basePath += Url::RelativeApiBase;
+    if (m_token.isValid()) {
+        emit acquireTokenSucceed();
+    } else {
+        emit acquireTokenFailed();
     }
-    // else: absolute path, use only provided part
-
-    QUrl url(m_server);
-    url.setPath(basePath + path);
-    return url;
-}
-
-QString Client::extractPath(const QUrl &url) const
-{
-    const QString absoluteApiBase = QString("/%1").arg(Url::RelativeApiBase);
-
-    QString path = url.path();
-    if (path.startsWith(absoluteApiBase)) {
-        path = path.mid(absoluteApiBase.size());
-    }
-
-    return path;
 }
 
 QNetworkReply *Client::post(const QNetworkRequest &request, const QJsonObject &payload)
@@ -186,41 +147,26 @@ QNetworkReply *Client::post(const QNetworkRequest &request, const QByteArray &pa
 {
     QLOG_TRACE() << "Client::post()" << request.url() << payload;
 
-    if (token().isLifetimeExpired()) {
-        QLOG_ERROR() << "need a valid token to do requests";
-        return nullptr;
-    }
-
-    QNetworkRequest req = prepareRequest(request);
-    dumpRequestInfo("POST", req);
-    return prepareReply(m_qnam.post(req, payload));
+    dumpRequestInfo("POST", request);
+    return prepareReply(m_qnam.post(request, payload));
 }
 
 QNetworkReply *Client::get(QNetworkRequest request)
 {
     QLOG_TRACE() << "Client::get()" << request.url();
 
-    if (token().isLifetimeExpired()) {
-        QLOG_ERROR() << "need a valid token to do requests";
-        return nullptr;
-    }
-
-    QNetworkRequest req = prepareRequest(request);
-    dumpRequestInfo("GET", req);
-    return prepareReply(m_qnam.get(req));
+    dumpRequestInfo("GET", request);
+    return prepareReply(m_qnam.get(request));
 }
 
-QNetworkRequest Client::prepareRequest(QNetworkRequest request)
+QNetworkRequest Client::addAuthHeader(QNetworkRequest request)
 {
-    if (!request.hasRawHeader("Authorization")) {
-        request.setRawHeader("Authorization", QString("Bearer %1").arg(m_token.token()).toUtf8());
+    if (token().isLifetimeExpired()) {
+        QLOG_ERROR() << "a valid token has to be acquired prior to using it";
+        return request;
     }
-    if (!request.hasRawHeader("Accept")) {
-        request.setRawHeader("Accept", "application/json, text/javascript, */*; q=0.01");
-    }
-    if (!request.hasRawHeader("Content-Type")) {
-        request.setRawHeader("Content-Type", "application/json; charset=utf-8");
-    }
+
+    request.setRawHeader("Authorization", QString("Bearer %1").arg(m_token.token()).toUtf8());
 
     return request;
 }
@@ -241,27 +187,4 @@ void Client::dumpRequestInfo(const QString &verb, const QNetworkRequest &request
     foreach(QByteArray key, request.rawHeaderList()) {
         QLOG_DEBUG() << "\t" << key << request.rawHeader(key);
     }
-}
-
-void Client::handleAcquireTokenResponse(const int httpStatusCode, const QByteArray &responseBody)
-{
-    QLOG_TRACE() << "Client::handleAcquireTokenResponse()" << httpStatusCode << responseBody;
-
-    if (httpStatusCode != 200) {
-        QLOG_ERROR() << "HTTP-Status not 200-OK";
-        setToken(JwtToken(0));
-        emit acquireTokenFailed();
-        return;
-    }
-
-    QJsonDocument response = QJsonDocument::fromJson(responseBody);
-    if (!response.isObject()) {
-        QLOG_ERROR() << "Response is not a JSON Object";
-        setToken(JwtToken(0));
-        emit acquireTokenFailed();
-        return;
-    }
-
-    setToken(JwtToken::fromJsonObject(response.object()));
-    emit acquireTokenSucceed();
 }

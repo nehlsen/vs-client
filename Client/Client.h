@@ -6,6 +6,8 @@
 #include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkReply>
 #include "JwtToken.h"
+#include <Client/Api/GetVenue.h>
+#include <Client/Api/AcquireToken.h>
 
 class QTimer;
 
@@ -23,8 +25,8 @@ public:
 
     explicit Client(QObject *parent = nullptr);
 
-    void setServer(const QUrl &server);
-    QUrl server() const;
+    void setServer(const QString &server);
+    QString server() const;
 
     void setUsername(const QString& username);
     QString username() const;
@@ -36,6 +38,9 @@ public:
     bool isTokenAutoRefreshEnabled() const;
 
     JwtToken token() const;
+
+    // just for testing, will be changed
+    void getVenue(int id);
 
 public slots:
     /**
@@ -63,7 +68,7 @@ protected slots:
     void requestSslErrors(const QList<QSslError> &errors);
 
 protected:
-    QUrl m_server;
+    QString m_server;
     QString m_username;
     QString m_password; // FIXME probably not wise to save password ?!
 
@@ -71,8 +76,8 @@ protected:
     JwtToken m_token;
     void setToken(JwtToken token);
 
-    QUrl createUrl(const QString &path) const;
-    QString extractPath(const QUrl &url) const;
+    AcquireToken m_endpointAcquireToken;
+    GetVenue m_endpointGetVenue;
 
     QNetworkAccessManager m_qnam;
 
@@ -80,11 +85,8 @@ protected:
     QNetworkReply *post(const QNetworkRequest &request, const QJsonDocument &payload);
     QNetworkReply *post(const QNetworkRequest &request, const QByteArray &payload);
     QNetworkReply *get(QNetworkRequest request);
-    QNetworkRequest prepareRequest(QNetworkRequest request);
+    QNetworkRequest addAuthHeader(QNetworkRequest request);
     QNetworkReply *prepareReply(QNetworkReply *reply);
-    void dumpRequestInfo(const QString &verb, const QNetworkRequest &request) const;
-
-    void handleAcquireTokenResponse(const int httpStatusCode, const QByteArray &responseBody);
-};
+    void dumpRequestInfo(const QString &verb, const QNetworkRequest &request) const; };
 
 #endif // VSC_CLIENT_H

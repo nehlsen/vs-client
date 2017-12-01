@@ -1,5 +1,10 @@
-#include <QsLog/QsLog.h>
 #include "JwtToken.h"
+#include <QsLog/QsLog.h>
+
+JwtToken::JwtToken() :
+    m_lifetime(-1)
+{
+}
 
 JwtToken::JwtToken(int lifetime):
     m_lifetime(lifetime)
