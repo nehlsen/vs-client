@@ -28,12 +28,6 @@ public:
     void setServer(const QString &server);
     QString server() const;
 
-    void setUsername(const QString& username);
-    QString username() const;
-
-    void setPassword(const QString& password);
-    QString password() const;
-
     void setTokenAutoRefreshEnabled(bool enabled = true);
     bool isTokenAutoRefreshEnabled() const;
 
@@ -55,7 +49,6 @@ public slots:
      * @param password
      * @see tokenChanged
      */
-    void acquireToken();
     void acquireToken(const QString &username, const QString &password);
 
 signals:
@@ -74,8 +67,6 @@ protected slots:
 
 protected:
     QString m_server;
-    QString m_username;
-    QString m_password; // FIXME probably not wise to save password ?!
 
     bool m_autoRefreshEnabled;
     JwtToken m_token;

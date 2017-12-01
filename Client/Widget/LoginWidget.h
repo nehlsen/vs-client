@@ -2,8 +2,8 @@
 #define VSC_LOGINWIDGET_H
 
 #include <QtWidgets/QWidget>
-
-class QLineEdit;
+#include <QtWidgets/QLineEdit>
+#include <QtWidgets/QPushButton>
 
 class LoginWidget : public QWidget
 {
@@ -12,9 +12,10 @@ Q_OBJECT
 public:
     explicit LoginWidget(QWidget *parent = nullptr);
 
-protected:
-    QLineEdit *m_editUsername;
-    QLineEdit *m_editPassword;
+    QLineEdit *editUsername;
+    QLineEdit *editPassword;
+
+    QPushButton *btnLogin;
 };
 
 #endif // VSC_LOGINWIDGET_H

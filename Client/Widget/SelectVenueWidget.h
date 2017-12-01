@@ -2,6 +2,7 @@
 #define VSC_SELECTVENUEWIDGET_H
 
 #include <QtWidgets/QWidget>
+#include <QtWidgets/QPushButton>
 
 class QLineEdit;
 
@@ -12,8 +13,9 @@ Q_OBJECT
 public:
     explicit SelectVenueWidget(QWidget *parent = nullptr);
 
-protected:
-    QLineEdit *m_editVenueToken;
+    QLineEdit *editVenueToken;
+
+    QPushButton *btnNext;
 };
 
 #endif // VSC_SELECTVENUEWIDGET_H

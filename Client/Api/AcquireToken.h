@@ -4,6 +4,7 @@
 #include "Endpoint.h"
 #include <Client/JwtToken.h>
 
+// FIXME probably not wise to save password ?!
 class AcquireToken : public Endpoint
 {
 public:

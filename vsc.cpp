@@ -25,8 +25,8 @@ Client* createClient()
 
     auto *client = new Client();
     client->setServer(settings.value("Server/Url").toString());
-    client->setUsername(settings.value("Server/Username").toString());
-    client->setPassword(settings.value("Server/Password").toString());
+//    client->setUsername(settings.value("Server/Username").toString());
+//    client->setPassword(settings.value("Server/Password").toString());
 
     return client;
 }

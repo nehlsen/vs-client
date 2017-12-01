@@ -23,26 +23,6 @@ QString Client::server() const
     return m_server;
 }
 
-void Client::setUsername(const QString &username)
-{
-    m_username = username;
-}
-
-QString Client::username() const
-{
-    return m_username;
-}
-
-void Client::setPassword(const QString &password)
-{
-    m_password = password;
-}
-
-QString Client::password() const
-{
-    return m_password;
-}
-
 void Client::setTokenAutoRefreshEnabled(bool enabled)
 {
     m_autoRefreshEnabled = enabled;
@@ -83,11 +63,6 @@ void Client::setVenue(const QString &venueToken)
 Venue Client::venue() const
 {
     return m_venue;
-}
-
-void Client::acquireToken()
-{
-    acquireToken(username(), password());
 }
 
 void Client::acquireToken(const QString &username, const QString &password)

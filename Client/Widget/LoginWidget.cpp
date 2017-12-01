@@ -1,19 +1,22 @@
 #include "LoginWidget.h"
 
-#include <QtWidgets/QLineEdit>
 #include <QtWidgets/QFormLayout>
 #include <QtWidgets/QLabel>
 
 LoginWidget::LoginWidget(QWidget *parent) :
     QWidget(parent)
 {
-    m_editUsername = new QLineEdit(this);
-    m_editPassword = new QLineEdit(this);
-    m_editPassword->setEchoMode(QLineEdit::Password);
+    editUsername = new QLineEdit(this);
+    editPassword = new QLineEdit(this);
+    editPassword->setEchoMode(QLineEdit::Password);
+
+    btnLogin = new QPushButton(this);
+    btnLogin->setText(tr("Login"));
 
     auto *layout = new QFormLayout(this);
-    layout->addRow(new QLabel(tr("Username")), m_editUsername);
-    layout->addRow(new QLabel(tr("Password")), m_editPassword);
+    layout->addRow(new QLabel(tr("Username")), editUsername);
+    layout->addRow(new QLabel(tr("Password")), editPassword);
+    layout->addRow(btnLogin);
 
     setLayout(layout);
 }
