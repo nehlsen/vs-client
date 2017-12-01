@@ -32,7 +32,12 @@ set(VSC_CORE
         Client/Api/GetVenue.cpp
         Client/Model/Venue.cpp
 )
+set(VSC_GUI
+        Client/Widget/MainWindow.cpp
+        Client/Widget/LoginWidget.cpp
+        Client/Widget/SelectVenueWidget.cpp
+)
 
 set(VSC vsc.cpp)
-add_executable(vsc ${QSLOG} ${VSC_CORE} ${VSC})
+add_executable(vsc ${QSLOG} ${VSC_CORE} ${VSC_GUI} ${VSC})
 target_link_libraries(vsc Qt5::Widgets Qt5::Network)

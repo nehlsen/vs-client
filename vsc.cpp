@@ -2,6 +2,7 @@
 #include <QtCore/QDir>
 #include <QtCore/QSettings>
 #include <Client/Client.h>
+#include <Client/Widget/MainWindow.h>
 #include "QsLog/QsLog.h"
 
 using namespace QsLogging;
@@ -52,18 +53,18 @@ int main(int argc, char **argv)
     logger.addDestination(fileDestination);
 //    logger.addDestination(functorDestination);
 
-    auto *client = createClient();
-    client->acquireToken();
-    QObject::connect(
-            client,
-            &Client::acquireTokenSucceed,
-            [=]() { client->setVenue(QString::number(3)); }
-    );
+//    auto *client = createClient();
+//    client->acquireToken();
+//    QObject::connect(
+//            client,
+//            &Client::acquireTokenSucceed,
+//            [=]() { client->setVenue(QString::number(3)); }
+//    );
 //    client->getVenue(3);
 
-//    MainWidget mainWindow;
+    MainWindow mainWindow;
 //    mainWindow.showFullScreen();
-//    mainWindow.show();
+    mainWindow.show();
 
     int exitCode = app.exec();
     Logger::destroyInstance();
