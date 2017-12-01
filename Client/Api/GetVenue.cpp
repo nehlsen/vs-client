@@ -24,3 +24,8 @@ bool GetVenue::isMatch(const QUrl &requestUrl)
     const QString &url = QString(GET_VENUE_URL);
     return requestUrl.toString().contains(url.left(url.size()-7));
 }
+
+Venue GetVenue::venue() const
+{
+    return m_venue;
+}

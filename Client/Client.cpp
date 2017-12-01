@@ -53,17 +53,36 @@ bool Client::isTokenAutoRefreshEnabled() const
     return m_autoRefreshEnabled;
 }
 
+Client::Status Client::status() const
+{
+    Status status = Offline;
+
+    if (token().isValid()) {
+        status = Online;
+    }
+    if (venue().isValid()) {
+        return Ready;
+    }
+
+    return status;
+}
+
 JwtToken Client::token() const
 {
     return m_token;
 }
 
-void Client::getVenue(int id)
+void Client::setVenue(const QString &venueToken)
 {
-    QLOG_TRACE() << "Client::getVenue(" << id << ")";
+    QLOG_TRACE() << "Client::setVenue(" << venueToken << ")";
 
-    m_endpointGetVenue.setRequestParameters(server(), QStringList() << QString::number(id));
+    m_endpointGetVenue.setRequestParameters(server(), QStringList() << venueToken);
     get(addAuthHeader(m_endpointGetVenue.createRequest()));
+}
+
+Venue Client::venue() const
+{
+    return m_venue;
 }
 
 void Client::acquireToken()
@@ -107,7 +126,7 @@ void Client::requestFinished()
         setToken(m_endpointAcquireToken.token());
     } else if (m_endpointGetVenue.isMatch(requestUrl)) {
         m_endpointGetVenue.parseResponse(httpStatusCode, responseBody);
-//        setVenue(m_endpointGetVenue.venue());
+        setVenue(m_endpointGetVenue.venue());
     }
 }
 
@@ -121,7 +140,7 @@ void Client::requestSslErrors(const QList<QSslError> &errors)
     QLOG_TRACE() << "Client::requestSslErrors()";
 }
 
-void Client::setToken(JwtToken token)
+void Client::setToken(const JwtToken &token)
 {
     m_token = token;
     emit tokenChanged(m_token);
@@ -131,6 +150,21 @@ void Client::setToken(JwtToken token)
     } else {
         emit acquireTokenFailed();
     }
+
+    updateStatus();
+}
+
+void Client::setVenue(const Venue &venue)
+{
+    m_venue = venue;
+    emit venueChanged(m_venue);
+
+    updateStatus();
+}
+
+void Client::updateStatus()
+{
+    emit statusChanged(status());
 }
 
 QNetworkReply *Client::post(const QNetworkRequest &request, const QJsonObject &payload)

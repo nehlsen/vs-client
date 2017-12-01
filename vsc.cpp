@@ -57,7 +57,7 @@ int main(int argc, char **argv)
     QObject::connect(
             client,
             &Client::acquireTokenSucceed,
-            [=]() { client->getVenue(3); }
+            [=]() { client->setVenue(QString::number(3)); }
     );
 //    client->getVenue(3);
 

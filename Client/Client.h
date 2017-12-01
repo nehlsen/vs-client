@@ -37,10 +37,12 @@ public:
     void setTokenAutoRefreshEnabled(bool enabled = true);
     bool isTokenAutoRefreshEnabled() const;
 
+    Status status() const;
+
     JwtToken token() const;
 
-    // just for testing, will be changed
-    void getVenue(int id);
+    void setVenue(const QString &venueToken);
+    Venue venue() const;
 
 public slots:
     /**
@@ -58,9 +60,12 @@ public slots:
 
 signals:
     void tokenChanged(const JwtToken &token);
-
     void acquireTokenSucceed();
     void acquireTokenFailed();
+
+    void venueChanged(const Venue &venue);
+
+    void statusChanged(Status status);
 
 protected slots:
     void requestFinished();
@@ -74,7 +79,12 @@ protected:
 
     bool m_autoRefreshEnabled;
     JwtToken m_token;
-    void setToken(JwtToken token);
+    void setToken(const JwtToken &token);
+
+    Venue m_venue;
+    void setVenue(const Venue &venue);
+
+    void updateStatus();
 
     AcquireToken m_endpointAcquireToken;
     GetVenue m_endpointGetVenue;
