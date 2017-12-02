@@ -23,7 +23,7 @@ QString Venue::description() const
 
 bool Venue::isValid() const
 {
-    return false;
+    return !token().isEmpty() && !name().isEmpty();
 }
 
 Venue Venue::fromJsonObject(const QJsonObject &jsonObject)
