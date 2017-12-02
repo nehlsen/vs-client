@@ -1,10 +1,6 @@
-#include <QtNetwork/QNetworkRequest>
-#include <QtNetwork/QNetworkReply>
-#include <QsLog/QsLog.h>
-#include <QtCore/QJsonDocument>
-#include <QtCore/QTimer>
-#include <QtCore/QJsonObject>
 #include "Client.h"
+#include <QsLog/QsLog.h>
+#include <QtCore/QTimer>
 
 Client::Client(QObject *parent):
     QObject(parent),
@@ -139,6 +135,8 @@ void Client::setVenue(const Venue &venue)
 
 void Client::updateStatus()
 {
+    QLOG_TRACE() << "Client::updateStatus()" << status();
+
     emit statusChanged(status());
 }
 

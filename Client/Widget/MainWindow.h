@@ -6,6 +6,7 @@
 
 class LoginWidget;
 class SelectVenueWidget;
+class VenueWidget;
 
 class MainWindow : public QStackedWidget
 {
@@ -25,6 +26,7 @@ protected:
     // TODO add settings widget to setup server etc
     LoginWidget *m_loginWidget;
     SelectVenueWidget *m_selectVenueWidget;
+    VenueWidget *m_venueWidget;
 
     void loadSettings();
 };

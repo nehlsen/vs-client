@@ -2,6 +2,7 @@
 
 #include <Client/Widget/LoginWidget.h>
 #include <Client/Widget/SelectVenueWidget.h>
+#include <Client/Widget/VenueWidget.h>
 #include <QtCore/QSettings>
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -20,6 +21,9 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(m_selectVenueWidget->btnNext, &QPushButton::clicked,
             this, &MainWindow::onBtnSelectVenueClicked);
     addWidget(m_selectVenueWidget);
+
+    m_venueWidget = new VenueWidget(this);
+    addWidget(m_venueWidget);
 
     loadSettings();
     onClientStatusChanged(Client::Offline);

@@ -9,7 +9,10 @@ set(CMAKE_AUTOUIC ON)
 
 find_package(Qt5Core)
 find_package(Qt5Widgets)
+find_package(Qt5Gui)
 find_package(Qt5Network)
+find_package(Qt5Multimedia)
+find_package(Qt5MultimediaWidgets)
 #find_package(Qt5SerialPort)
 #find_package(Qt5Sql)
 #find_package(Qt5Qml)
@@ -36,8 +39,10 @@ set(VSC_GUI
         Client/Widget/MainWindow.cpp
         Client/Widget/LoginWidget.cpp
         Client/Widget/SelectVenueWidget.cpp
+        Client/Widget/VenueWidget.cpp
+        Client/Widget/CapturePublishWidget.cpp
 )
 
 set(VSC vsc.cpp)
 add_executable(vsc ${QSLOG} ${VSC_CORE} ${VSC_GUI} ${VSC})
-target_link_libraries(vsc Qt5::Widgets Qt5::Network)
+target_link_libraries(vsc Qt5::Widgets Qt5::Gui Qt5::Network Qt5::Multimedia Qt5::MultimediaWidgets)
