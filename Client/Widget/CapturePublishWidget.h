@@ -16,6 +16,9 @@ Q_OBJECT
 public:
     explicit CapturePublishWidget(QWidget *parent = nullptr);
 
+signals:
+    void publishImage(const QImage &image);
+
 protected slots:
     void onBtnCaptureClicked();
     void onImageSaved(int id, const QString &fileName);
@@ -32,7 +35,8 @@ protected:
     QPushButton *m_btnCapture;
 
     void initPagePreviewPublish();
-    QLabel *m_preview;
+    QImage m_preview;
+    QLabel *m_previewDisplay;
     QPushButton *m_btnPublish;
     QPushButton *m_btnDiscard;
 };

@@ -1,6 +1,7 @@
 #include "Client.h"
 #include <QsLog/QsLog.h>
 #include <QtCore/QTimer>
+#include <QtNetwork/QHttpMultiPart>
 
 Client::Client(QObject *parent):
     QObject(parent),
@@ -69,6 +70,29 @@ void Client::acquireToken(const QString &username, const QString &password)
     post(m_endpointAcquireToken.createRequest(), m_endpointAcquireToken.payload());
 }
 
+void Client::postPicture(const QImage &image)
+{
+    QLOG_TRACE() << "Client::postPicture";
+
+    m_endpointPostPicture.setRequestParameters(server(), QStringList());
+    post(addAuthHeader(m_endpointPostPicture.createRequest()), m_endpointPostPicture.payload(image));
+}
+
+void Client::linkPicture(const QString &publicPictureLocation)
+{
+    QLOG_TRACE() << "Client::linkPicture(" << publicPictureLocation << ")";
+
+    QStringList parameters;
+    parameters << QString::number(venue().id())
+               << publicPictureLocation;
+
+    m_endpointLinkPicture.setRequestParameters(server(), parameters);
+    QNetworkRequest request = addAuthHeader(m_endpointLinkPicture.createRequest());
+
+    dumpRequestInfo("LINK", request);
+    prepareReply(m_qnam.sendCustomRequest(request, "LINK"));
+}
+
 void Client::requestFinished()
 {
     QLOG_TRACE() << "Client::requestFinished()";
@@ -78,26 +102,19 @@ void Client::requestFinished()
         return;
     }
 
-    const int httpStatusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
-    const QUrl &requestUrl = reply->request().url();
-
-    QLOG_INFO() << requestUrl.toString()
-                << httpStatusCode
-                << reply->attribute(QNetworkRequest::HttpReasonPhraseAttribute).toString();
-
-    foreach(QByteArray key, reply->rawHeaderList()) {
-        QLOG_DEBUG() << "\t" << key << reply->rawHeader(key);
-    }
-
-    const QByteArray responseBody = reply->readAll();
-    QLOG_TRACE() << responseBody;
-
-    if (m_endpointAcquireToken.isMatch(requestUrl)) {
-        m_endpointAcquireToken.parseResponse(httpStatusCode, responseBody);
+    if (m_endpointAcquireToken.isMatch(reply)) {
+        m_endpointAcquireToken.parseResponse(reply);
         setToken(m_endpointAcquireToken.token());
-    } else if (m_endpointGetVenue.isMatch(requestUrl)) {
-        m_endpointGetVenue.parseResponse(httpStatusCode, responseBody);
+    } else if (m_endpointGetVenue.isMatch(reply)) {
+        m_endpointGetVenue.parseResponse(reply);
         setVenue(m_endpointGetVenue.venue());
+    } else if (m_endpointPostPicture.isMatch(reply)) {
+        m_endpointPostPicture.parseResponse(reply);
+        emit pictureUploaded(m_endpointPostPicture.publicLocation());
+        linkPicture(m_endpointPostPicture.publicLocation());
+    } else if (m_endpointLinkPicture.isMatch(reply)) {
+        m_endpointLinkPicture.parseResponse(reply);
+        emit pictureLinked();
     }
 }
 
@@ -153,6 +170,14 @@ QNetworkReply *Client::post(const QNetworkRequest &request, const QJsonDocument 
 QNetworkReply *Client::post(const QNetworkRequest &request, const QByteArray &payload)
 {
     QLOG_TRACE() << "Client::post()" << request.url() << payload;
+
+    dumpRequestInfo("POST", request);
+    return prepareReply(m_qnam.post(request, payload));
+}
+
+QNetworkReply *Client::post(const QNetworkRequest &request, QHttpMultiPart *payload)
+{
+    QLOG_TRACE() << "Client::post()" << request.url() << "(HttpMultiPart)";
 
     dumpRequestInfo("POST", request);
     return prepareReply(m_qnam.post(request, payload));

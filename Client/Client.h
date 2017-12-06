@@ -8,8 +8,8 @@
 #include "JwtToken.h"
 #include <Client/Api/GetVenue.h>
 #include <Client/Api/AcquireToken.h>
-
-class QTimer;
+#include <Client/Api/PostPicture.h>
+#include <Client/Api/LinkPicture.h>
 
 class Client : public QObject
 {
@@ -51,12 +51,18 @@ public slots:
      */
     void acquireToken(const QString &username, const QString &password);
 
+    void postPicture(const QImage &image);
+    void linkPicture(const QString &publicPictureLocation);
+
 signals:
     void tokenChanged(const JwtToken &token);
     void acquireTokenSucceed();
     void acquireTokenFailed();
 
     void venueChanged(const Venue &venue);
+
+    void pictureUploaded(const QString &publicPictureLocation);
+    void pictureLinked();
 
     void statusChanged(Status status);
 
@@ -79,12 +85,15 @@ protected:
 
     AcquireToken m_endpointAcquireToken;
     GetVenue m_endpointGetVenue;
+    PostPicture m_endpointPostPicture;
+    LinkPicture m_endpointLinkPicture;
 
     QNetworkAccessManager m_qnam;
 
     QNetworkReply *post(const QNetworkRequest &request, const QJsonObject &payload);
     QNetworkReply *post(const QNetworkRequest &request, const QJsonDocument &payload);
     QNetworkReply *post(const QNetworkRequest &request, const QByteArray &payload);
+    QNetworkReply *post(const QNetworkRequest &request, QHttpMultiPart *payload);
     QNetworkReply *get(QNetworkRequest request);
     QNetworkRequest addAuthHeader(QNetworkRequest request);
     QNetworkReply *prepareReply(QNetworkReply *reply);

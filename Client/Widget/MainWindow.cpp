@@ -23,6 +23,8 @@ MainWindow::MainWindow(QWidget *parent) :
     addWidget(m_selectVenueWidget);
 
     m_venueWidget = new VenueWidget(this);
+    connect(m_venueWidget->capturePublishWidget, &CapturePublishWidget::publishImage,
+            m_client, &Client::postPicture);
     addWidget(m_venueWidget);
 
     loadSettings();

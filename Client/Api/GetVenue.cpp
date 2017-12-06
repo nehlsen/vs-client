@@ -6,8 +6,8 @@ QNetworkRequest GetVenue::createRequest()
 {
     QString query = QString(GET_VENUE_URL).arg(requestParameters().at(0));
 
-    QNetworkRequest request = QNetworkRequest(QUrl(server() + query));
-    addContentHeader(request);
+    QNetworkRequest request(QUrl(server() + query));
+    addJsonContentHeader(request);
 
     return request;
 }
@@ -21,8 +21,7 @@ bool GetVenue::handleJsonDocument(const QJsonDocument &document)
 
 bool GetVenue::isMatch(const QUrl &requestUrl)
 {
-    const QString &url = QString(GET_VENUE_URL);
-    return requestUrl.toString().contains(url.left(url.size()-7));
+    return requestUrl.toString().contains(QString(GET_VENUE_URL).arg(requestParameters().at(0)));
 }
 
 Venue GetVenue::venue() const

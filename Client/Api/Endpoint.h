@@ -2,30 +2,19 @@
 #define VSC_ENDPOINT_H
 
 #include <QtCore/QJsonDocument>
-#include <QtCore/QUrl>
-#include <QtNetwork/QNetworkRequest>
+#include "BasicEndpoint.h"
 
-#define DEV_MODE_PREFIX "/app_dev.php"
-
-class Endpoint
+class Endpoint : public BasicEndpoint
 {
 public:
-    void setRequestParameters(const QString &server, const QStringList &parameters);
-    QString server() const;
-    QStringList requestParameters() const;
-    virtual QNetworkRequest createRequest() = 0;
     virtual QJsonDocument payload();
 
-    virtual bool isMatch(const QUrl &requestUrl) = 0;
-    bool parseResponse(int httpStatusCode, const QByteArray &responseBody);
+    using BasicEndpoint::parseResponse;
+    bool parseResponse(int httpStatusCode, const QByteArray &responseBody) override;
 
 protected:
     virtual bool handleJsonDocument(const QJsonDocument &document);
-    void addContentHeader(QNetworkRequest &request);
-
-private:
-    QString m_server;
-    QStringList m_requestParameters;
+    void addJsonContentHeader(QNetworkRequest &request);
 };
 
 #endif // VSC_ENDPOINT_H

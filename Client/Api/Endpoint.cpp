@@ -1,22 +1,6 @@
 #include "Endpoint.h"
 #include <QsLog/QsLog.h>
 
-void Endpoint::setRequestParameters(const QString &server, const QStringList &parameters)
-{
-    m_server = server;
-    m_requestParameters = parameters;
-}
-
-QString Endpoint::server() const
-{
-    return m_server;
-}
-
-QStringList Endpoint::requestParameters() const
-{
-    return m_requestParameters;
-}
-
 QJsonDocument Endpoint::payload()
 {
     return QJsonDocument();
@@ -43,7 +27,7 @@ bool Endpoint::handleJsonDocument(const QJsonDocument &document)
     return false;
 }
 
-void Endpoint::addContentHeader(QNetworkRequest &request)
+void Endpoint::addJsonContentHeader(QNetworkRequest &request)
 {
     request.setRawHeader("Accept", "application/json, text/javascript, */*; q=0.01");
     request.setRawHeader("Content-Type", "application/json; charset=utf-8");

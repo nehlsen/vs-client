@@ -4,8 +4,8 @@
 
 QNetworkRequest AcquireToken::createRequest()
 {
-    QNetworkRequest request = QNetworkRequest(QUrl(server() + ACQUIRE_TOKEN_URL));
-    addContentHeader(request);
+    QNetworkRequest request(QUrl(server() + ACQUIRE_TOKEN_URL));
+    addJsonContentHeader(request);
 
     return request;
 }

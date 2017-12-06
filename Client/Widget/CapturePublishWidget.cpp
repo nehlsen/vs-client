@@ -38,7 +38,8 @@ void CapturePublishWidget::onImageCaptured(int id, const QImage &preview)
 {
     QLOG_TRACE() << "CapturePublishWidget::onImageCaptured(" << id << ", preview)";
 
-    m_preview->setPixmap(QPixmap::fromImage(preview));
+    m_preview = preview;
+    m_previewDisplay->setPixmap(QPixmap::fromImage(m_preview));
     setCurrentIndex(1);
 }
 
@@ -70,10 +71,10 @@ void CapturePublishWidget::initPageCapture()
 
 void CapturePublishWidget::initPagePreviewPublish()
 {
-    m_preview = new QLabel();
-    m_preview->setBackgroundRole(QPalette::Base);
-    m_preview->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
-    m_preview->setScaledContents(true);
+    m_previewDisplay = new QLabel();
+    m_previewDisplay->setBackgroundRole(QPalette::Base);
+    m_previewDisplay->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
+    m_previewDisplay->setScaledContents(true);
 
     m_btnPublish = new QPushButton();
     m_btnPublish->setText(tr("Publish"));
@@ -88,7 +89,7 @@ void CapturePublishWidget::initPagePreviewPublish()
     btnLayout->addWidget(m_btnPublish);
 
     auto *layout = new QVBoxLayout();
-    layout->addWidget(m_preview);
+    layout->addWidget(m_previewDisplay);
     layout->addLayout(btnLayout);
 
     auto *pagePreviewPublish = new QWidget(this);
@@ -98,6 +99,7 @@ void CapturePublishWidget::initPagePreviewPublish()
 
 void CapturePublishWidget::onBtnPublishClicked()
 {
+    emit publishImage(m_preview);
     setCurrentIndex(0);
 }
 

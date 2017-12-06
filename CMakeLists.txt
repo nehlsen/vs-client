@@ -30,9 +30,12 @@ set(QSLOG
 set(VSC_CORE
         Client/Client.cpp
         Client/JwtToken.cpp
+        Client/Api/BasicEndpoint.cpp
         Client/Api/Endpoint.cpp
         Client/Api/AcquireToken.cpp
         Client/Api/GetVenue.cpp
+        Client/Api/PostPicture.cpp
+        Client/Api/LinkPicture.cpp
         Client/Model/Venue.cpp
 )
 set(VSC_GUI
