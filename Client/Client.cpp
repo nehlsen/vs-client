@@ -87,10 +87,7 @@ void Client::linkPicture(const QString &publicPictureLocation)
                << publicPictureLocation;
 
     m_endpointLinkPicture.setRequestParameters(server(), parameters);
-    QNetworkRequest request = addAuthHeader(m_endpointLinkPicture.createRequest());
-
-    dumpRequestInfo("LINK", request);
-    prepareReply(m_qnam.sendCustomRequest(request, "LINK"));
+    post(addAuthHeader(m_endpointLinkPicture.createRequest()), m_endpointLinkPicture.payload());
 }
 
 void Client::requestFinished()
