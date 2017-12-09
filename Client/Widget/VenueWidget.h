@@ -3,6 +3,7 @@
 
 #include <QtWidgets/QWidget>
 #include "CapturePublishWidget.h"
+#include "VenuePicturesWidget.h"
 
 class VenueWidget : public QWidget
 {
@@ -15,6 +16,7 @@ public:
     // display venue pictures (extra widget)
     // grab and upload picture (extra widget)
 
+    VenuePicturesWidget *venuePicturesWidget;
     CapturePublishWidget *capturePublishWidget;
 };
 

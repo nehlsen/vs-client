@@ -74,6 +74,11 @@ Venue Client::venue() const
     return m_venue;
 }
 
+VenuePictures *Client::venuePictures()
+{
+    return m_venuePictures;
+}
+
 void Client::acquireToken(const QString &username, const QString &password)
 {
     QLOG_TRACE() << "Client::acquireToken";

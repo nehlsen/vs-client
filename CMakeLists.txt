@@ -30,6 +30,7 @@ set(QSLOG
 set(VSC_CORE
         Client/Client.cpp
         Client/JwtToken.cpp
+        Client/Settings.cpp
         Client/Api/BasicEndpoint.cpp
         Client/Api/Endpoint.cpp
         Client/Api/AcquireToken.cpp
@@ -47,8 +48,13 @@ set(VSC_GUI
         Client/Widget/SelectVenueWidget.cpp
         Client/Widget/VenueWidget.cpp
         Client/Widget/CapturePublishWidget.cpp
+        Client/Widget/VenuePicturesWidget.cpp
 )
 
 set(VSC vsc.cpp)
 add_executable(vsc ${QSLOG} ${VSC_CORE} ${VSC_GUI} ${VSC})
 target_link_libraries(vsc Qt5::Widgets Qt5::Gui Qt5::Network Qt5::Multimedia Qt5::MultimediaWidgets)
+
+set(VSC_DISPLAY display.cpp)
+add_executable(display ${QSLOG} ${VSC_CORE} ${VSC_GUI} ${VSC_DISPLAY})
+target_link_libraries(display Qt5::Widgets Qt5::Gui Qt5::Network Qt5::Multimedia Qt5::MultimediaWidgets)

@@ -4,6 +4,7 @@
 #include <Client/Widget/SelectVenueWidget.h>
 #include <Client/Widget/VenueWidget.h>
 #include <QtCore/QSettings>
+#include <Client/Settings.h>
 
 MainWindow::MainWindow(QWidget *parent) :
     QStackedWidget(parent)
@@ -24,6 +25,7 @@ MainWindow::MainWindow(QWidget *parent) :
     addWidget(m_selectVenueWidget);
 
     m_venueWidget = new VenueWidget(this);
+    m_venueWidget->venuePicturesWidget->setVenuePictures(m_client->venuePictures());
     connect(m_venueWidget->capturePublishWidget, &CapturePublishWidget::publishImage,
             m_client, &Client::postPicture);
     addWidget(m_venueWidget);
@@ -62,21 +64,11 @@ void MainWindow::onBtnSelectVenueClicked()
 
 void MainWindow::loadSettings()
 {
-    QSettings settings;
-    settings.beginGroup("Server");
-    if (!settings.contains("Url")) {
-        settings.setValue("Url", "http://vesh.my-server.com");
-    }
-    if (!settings.contains("Username")) {
-        settings.setValue("Username", "my-username");
-    }
-    if (!settings.contains("Password")) {
-        settings.setValue("Password", "my-password");
-    }
-    settings.endGroup();
-    settings.sync();
+    Settings::setDefaults();
 
+    QSettings settings;
     m_client->setServer(settings.value("Server/Url").toString());
+    m_client->venuePictures()->setCacheFolder(settings.value("Local/CacheFolder").toString());
     m_loginWidget->editUsername->setText(settings.value("Server/Username").toString());
     m_loginWidget->editPassword->setText(settings.value("Server/Password").toString());
 }

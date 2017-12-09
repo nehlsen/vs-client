@@ -16,8 +16,12 @@ public:
 
     static VenuePicture fromJsonObject(const QJsonObject &jsonObject);
 
+    void setLocalPath(const QString &path);
+    QString localPath() const;
+
 protected:
     QString m_uri;
+    QString m_localPath;
 };
 
 #endif // VSC_VENUEPICTURE_H

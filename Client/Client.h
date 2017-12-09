@@ -43,6 +43,7 @@ public:
 
     void setVenue(const QString &venueToken);
     Venue venue() const;
+    VenuePictures *venuePictures();
 
 public slots:
     /**

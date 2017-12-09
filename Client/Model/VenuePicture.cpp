@@ -23,6 +23,17 @@ VenuePicture VenuePicture::fromJsonObject(const QJsonObject &jsonObject)
     }
 
     picture.m_uri = jsonObject.value(QLatin1String("uri")).toString();
+    QLOG_TRACE() << "\t" << picture.m_uri;
 
     return picture;
+}
+
+void VenuePicture::setLocalPath(const QString &path)
+{
+    m_localPath = path;
+}
+
+QString VenuePicture::localPath() const
+{
+    return m_localPath;
 }
