@@ -2,10 +2,12 @@
 #include <QsLog/QsLog.h>
 #include <QtCore/QTimer>
 #include <QtNetwork/QHttpMultiPart>
+#include <Client/Model/VenuePictures.h>
 
 Client::Client(QObject *parent):
     QObject(parent),
-    m_autoRefreshEnabled(true)
+    m_autoRefreshEnabled(true),
+    m_venuePictures(new VenuePictures(this))
 {
     QLOG_TRACE() << "Client::Client";
 }
@@ -28,6 +30,16 @@ void Client::setTokenAutoRefreshEnabled(bool enabled)
 bool Client::isTokenAutoRefreshEnabled() const
 {
     return m_autoRefreshEnabled;
+}
+
+void Client::setAutoFetchPicturesEnabled(bool enabled)
+{
+    m_venuePictures->setAutoFetchPicturesEnabled(enabled);
+}
+
+bool Client::isAutoFetchPicturesEnabled() const
+{
+    return m_venuePictures->isAutoFetchPicturesEnabled();
 }
 
 Client::Status Client::status() const
@@ -90,6 +102,14 @@ void Client::linkPicture(const QString &publicPictureLocation)
     post(addAuthHeader(m_endpointLinkPicture.createRequest()), m_endpointLinkPicture.payload());
 }
 
+void Client::getVenuePictures()
+{
+    QLOG_TRACE() << "Client::getVenuePictures()";
+
+    m_endpointGetVenuePictures.setRequestParameters(server(), QStringList() << QString::number(venue().id()));
+    get(addAuthHeader(m_endpointGetVenuePictures.createRequest()));
+}
+
 void Client::requestFinished()
 {
     QLOG_TRACE() << "Client::requestFinished()";
@@ -112,6 +132,9 @@ void Client::requestFinished()
     } else if (m_endpointLinkPicture.isMatch(reply)) {
         m_endpointLinkPicture.parseResponse(reply);
         emit pictureLinked();
+    } else if (m_endpointGetVenuePictures.isMatch(reply)) {
+        m_endpointGetVenuePictures.parseResponse(reply);
+        m_venuePictures->readUpdate(m_endpointGetVenuePictures.venuePictures());
     }
 }
 

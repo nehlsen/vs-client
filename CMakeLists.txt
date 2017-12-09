@@ -34,9 +34,12 @@ set(VSC_CORE
         Client/Api/Endpoint.cpp
         Client/Api/AcquireToken.cpp
         Client/Api/GetVenue.cpp
+        Client/Api/GetVenuePictures.cpp
         Client/Api/PostPicture.cpp
         Client/Api/LinkPicture.cpp
         Client/Model/Venue.cpp
+        Client/Model/VenuePicture.cpp
+        Client/Model/VenuePictures.cpp
 )
 set(VSC_GUI
         Client/Widget/MainWindow.cpp

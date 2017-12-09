@@ -24,5 +24,9 @@ QJsonDocument LinkPicture::payload()
 
 bool LinkPicture::isMatch(const QUrl &requestUrl)
 {
+    if (requestParameters().isEmpty()) {
+        return false;
+    }
+
     return requestUrl.toString().contains(QString(LINK_PICTURE_URL).arg(requestParameters().at(0)));
 }

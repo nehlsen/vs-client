@@ -21,6 +21,10 @@ bool GetVenue::handleJsonDocument(const QJsonDocument &document)
 
 bool GetVenue::isMatch(const QUrl &requestUrl)
 {
+    if (requestParameters().isEmpty()) {
+        return false;
+    }
+
     return requestUrl.toString().contains(QString(GET_VENUE_URL).arg(requestParameters().at(0)));
 }
 

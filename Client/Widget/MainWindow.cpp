@@ -9,6 +9,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QStackedWidget(parent)
 {
     m_client = new Client(this);
+    m_client->setAutoFetchPicturesEnabled(true);
     connect(m_client, &Client::statusChanged,
             this, &MainWindow::onClientStatusChanged);
 
@@ -64,13 +65,13 @@ void MainWindow::loadSettings()
     QSettings settings;
     settings.beginGroup("Server");
     if (!settings.contains("Url")) {
-        settings.setValue("Url", "http://vesh.local");
+        settings.setValue("Url", "http://vesh.my-server.com");
     }
     if (!settings.contains("Username")) {
-        settings.setValue("Username", "nehlsen");
+        settings.setValue("Username", "my-username");
     }
     if (!settings.contains("Password")) {
-        settings.setValue("Password", "xc1337");
+        settings.setValue("Password", "my-password");
     }
     settings.endGroup();
     settings.sync();

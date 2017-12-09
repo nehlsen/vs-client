@@ -14,8 +14,8 @@ bool Endpoint::parseResponse(int httpStatusCode, const QByteArray &responseBody)
     }
 
     QJsonDocument response = QJsonDocument::fromJson(responseBody);
-    if (!response.isObject()) {
-        QLOG_ERROR() << "Endpoint::parseResponse: Response is not a JSON Object";
+    if (response.isEmpty()) {
+        QLOG_ERROR() << "Endpoint::parseResponse: Response is empty JSON";
         return false;
     }
 

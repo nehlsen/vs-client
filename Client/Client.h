@@ -7,9 +7,12 @@
 #include <QtNetwork/QNetworkReply>
 #include "JwtToken.h"
 #include <Client/Api/GetVenue.h>
+#include <Client/Api/GetVenuePictures.h>
 #include <Client/Api/AcquireToken.h>
 #include <Client/Api/PostPicture.h>
 #include <Client/Api/LinkPicture.h>
+
+class VenuePictures;
 
 class Client : public QObject
 {
@@ -30,6 +33,9 @@ public:
 
     void setTokenAutoRefreshEnabled(bool enabled = true);
     bool isTokenAutoRefreshEnabled() const;
+
+    void setAutoFetchPicturesEnabled(bool enabled = true);
+    bool isAutoFetchPicturesEnabled() const;
 
     Status status() const;
 
@@ -53,6 +59,11 @@ public slots:
 
     void postPicture(const QImage &image);
     void linkPicture(const QString &publicPictureLocation);
+
+    /**
+     * retrieve Pictures for current venue
+     */
+    void getVenuePictures();
 
 signals:
     void tokenChanged(const JwtToken &token);
@@ -80,6 +91,7 @@ protected:
 
     Venue m_venue;
     void setVenue(const Venue &venue);
+    VenuePictures *m_venuePictures;
 
     void updateStatus();
 
@@ -87,6 +99,7 @@ protected:
     GetVenue m_endpointGetVenue;
     PostPicture m_endpointPostPicture;
     LinkPicture m_endpointLinkPicture;
+    GetVenuePictures m_endpointGetVenuePictures;
 
     QNetworkAccessManager m_qnam;
 
