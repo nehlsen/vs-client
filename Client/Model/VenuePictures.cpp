@@ -29,7 +29,7 @@ bool VenuePictures::isAutoFetchPicturesEnabled() const
 
 void VenuePictures::setCacheFolder(const QString &folder)
 {
-    m_cacheFolder.setCurrent(folder);
+    m_cacheFolder.setPath(folder);
 
     if (!m_cacheFolder.exists()) {
         m_cacheFolder.mkpath(folder);
@@ -37,7 +37,7 @@ void VenuePictures::setCacheFolder(const QString &folder)
 
     Q_ASSERT(m_cacheFolder.exists());
 
-    QLOG_INFO() << "VenuePictures::setCacheFolder(), saving cache files to: " << m_cacheFolder.absolutePath();
+    QLOG_INFO() << "VenuePictures::setCacheFolder(" << folder << "), saving cache files to: " << m_cacheFolder.absolutePath();
 }
 
 void VenuePictures::update()

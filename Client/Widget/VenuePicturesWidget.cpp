@@ -60,7 +60,7 @@ void VenuePicturesWidget::advancePicture()
     }
 
     QString currentPicturePath = m_pictures.at(m_picturesCurrentIndex).localPath();
-    QLOG_INFO() << "VenuePicturesWidget::advancePicture(), "
+    QLOG_INFO() << "VenuePicturesWidget::advancePicture(),"
                 << "index:" << m_picturesCurrentIndex
                 << "picture:" << currentPicturePath;
 
