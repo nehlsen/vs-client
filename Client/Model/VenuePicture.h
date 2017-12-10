@@ -6,8 +6,9 @@
 
 #include <QtCore/QString>
 #include <QtCore/QJsonObject>
+#include "BasicEntity.h"
 
-class VenuePicture
+class VenuePicture : public BasicEntity
 {
 public:
     QString uri() const;

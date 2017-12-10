@@ -23,7 +23,8 @@ VenuePicture VenuePicture::fromJsonObject(const QJsonObject &jsonObject)
     }
 
     picture.m_uri = jsonObject.value(QLatin1String("uri")).toString();
-    QLOG_TRACE() << "\t" << picture.m_uri;
+//    QLOG_TRACE() << "\t" << picture.m_uri;
+    picture.readBasicAttributes(jsonObject);
 
     return picture;
 }
