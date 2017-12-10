@@ -100,7 +100,7 @@ void Client::linkPicture(const QString &publicPictureLocation)
     QLOG_TRACE() << "Client::linkPicture(" << publicPictureLocation << ")";
 
     QStringList parameters;
-    parameters << QString::number(venue().id())
+    parameters << venue().token()
                << publicPictureLocation;
 
     m_endpointLinkPicture.setRequestParameters(server(), parameters);
@@ -111,7 +111,7 @@ void Client::getVenuePictures()
 {
     QLOG_TRACE() << "Client::getVenuePictures()";
 
-    m_endpointGetVenuePictures.setRequestParameters(server(), QStringList() << QString::number(venue().id()));
+    m_endpointGetVenuePictures.setRequestParameters(server(), QStringList() << venue().token());
     get(addAuthHeader(m_endpointGetVenuePictures.createRequest()));
 }
 
@@ -170,7 +170,9 @@ void Client::setToken(const JwtToken &token)
 void Client::setVenue(const Venue &venue)
 {
     m_venue = venue;
-    emit venueChanged(m_venue);
+    if (venue.isValid()) {
+        emit venueChanged(m_venue);
+    }
 
     updateStatus();
 }

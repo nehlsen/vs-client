@@ -3,11 +3,12 @@
 
 #include <QtCore/QString>
 #include <QtCore/QJsonObject>
+#include <QtCore/QDateTime>
+#include "BasicEntity.h"
 
-class Venue
+class Venue : public BasicEntity
 {
 public:
-    int id() const;
     QString token() const;
     QString name() const;
     QString description() const;
@@ -17,7 +18,6 @@ public:
     static Venue fromJsonObject(const QJsonObject &jsonObject);
 
 protected:
-    int m_id;
     QString m_token;
     QString m_name;
     QString m_description;

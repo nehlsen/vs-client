@@ -38,6 +38,7 @@ set(VSC_CORE
         Client/Api/GetVenuePictures.cpp
         Client/Api/PostPicture.cpp
         Client/Api/LinkPicture.cpp
+        Client/Model/BasicEntity.cpp
         Client/Model/Venue.cpp
         Client/Model/VenuePicture.cpp
         Client/Model/VenuePictures.cpp
