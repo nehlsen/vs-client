@@ -1,6 +1,9 @@
 #ifndef VSC_BASICENTITY_H
 #define VSC_BASICENTITY_H
 
+#include <QtCore/QJsonObject>
+#include <QtCore/QDateTime>
+
 class BasicEntity
 {
 public:

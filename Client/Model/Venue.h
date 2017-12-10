@@ -2,8 +2,6 @@
 #define VSC_VENUE_H
 
 #include <QtCore/QString>
-#include <QtCore/QJsonObject>
-#include <QtCore/QDateTime>
 #include "BasicEntity.h"
 
 class Venue : public BasicEntity

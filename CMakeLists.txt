@@ -56,6 +56,6 @@ set(VSC vsc.cpp)
 add_executable(vsc ${QSLOG} ${VSC_CORE} ${VSC_GUI} ${VSC})
 target_link_libraries(vsc Qt5::Widgets Qt5::Gui Qt5::Network Qt5::Multimedia Qt5::MultimediaWidgets)
 
-set(VSC_DISPLAY display.cpp)
-add_executable(display ${QSLOG} ${VSC_CORE} ${VSC_GUI} ${VSC_DISPLAY})
+set(VSC_DISPLAY display.cpp Client/Widget/VenuePicturesWidget.cpp)
+add_executable(display ${QSLOG} ${VSC_CORE} ${VSC_DISPLAY})
 target_link_libraries(display Qt5::Widgets Qt5::Gui Qt5::Network Qt5::Multimedia Qt5::MultimediaWidgets)
