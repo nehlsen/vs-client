@@ -35,20 +35,20 @@ QString BasicEntity::updateBy() const
 void BasicEntity::readBasicAttributes(const QJsonObject &jsonObject)
 {
     if (jsonObject.contains(QLatin1String("start_at"))) {
-        m_startAt = QDateTime::fromString(jsonObject.value(QLatin1String("start_at")).toString());
+        m_startAt = QDateTime::fromString(jsonObject.value(QLatin1String("start_at")).toString(), Qt::ISODate);
     }
     if (jsonObject.contains(QLatin1String("end_at"))) {
-        m_endAt = QDateTime::fromString(jsonObject.value(QLatin1String("end_at")).toString());
+        m_endAt = QDateTime::fromString(jsonObject.value(QLatin1String("end_at")).toString(), Qt::ISODate);
     }
 
     if (jsonObject.contains(QLatin1String("created_at"))) {
-        m_createdAt = QDateTime::fromString(jsonObject.value(QLatin1String("created_at")).toString());
+        m_createdAt = QDateTime::fromString(jsonObject.value(QLatin1String("created_at")).toString(), Qt::ISODate);
     }
     if (jsonObject.contains(QLatin1String("created_by"))) {
         m_createdBy = jsonObject.value(QLatin1String("created_by")).toString();
     }
     if (jsonObject.contains(QLatin1String("updated_at"))) {
-        m_updatedAt = QDateTime::fromString(jsonObject.value(QLatin1String("updated_at")).toString());
+        m_updatedAt = QDateTime::fromString(jsonObject.value(QLatin1String("updated_at")).toString(), Qt::ISODate);
     }
     if (jsonObject.contains(QLatin1String("updated_by"))) {
         m_updatedBy = jsonObject.value(QLatin1String("updated_by")).toString();
