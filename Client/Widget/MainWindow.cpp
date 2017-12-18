@@ -1,8 +1,8 @@
 #include "MainWindow.h"
-
 #include <Client/Widget/LoginWidget.h>
 #include <Client/Widget/SelectVenueWidget.h>
 #include <Client/Widget/VenueWidget.h>
+#include <Client/Model/VenuePictures.h>
 #include <QtCore/QSettings>
 #include <Client/Settings.h>
 
@@ -23,8 +23,7 @@ MainWindow::MainWindow(QWidget *parent) :
             this, &MainWindow::onBtnSelectVenueClicked);
     addWidget(m_selectVenueWidget);
 
-    m_venueWidget = new VenueWidget(this);
-    m_venueWidget->venuePicturesWidget->setVenuePictures(m_client->venuePictures());
+    m_venueWidget = new VenueWidget(m_client, this);
     connect(m_venueWidget->capturePublishWidget, &CapturePublishWidget::publishImage,
             m_client, &Client::postPicture);
     addWidget(m_venueWidget);

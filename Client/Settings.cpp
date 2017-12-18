@@ -36,9 +36,9 @@ void Settings::setDefaults()
     }
     settings.endGroup();
 
-    settings.beginGroup("Display");
-    if (!settings.contains("AdvancePictureDelay")) {
-        settings.setValue("AdvancePictureDelay", 1);
+    settings.beginGroup("SlideShow");
+    if (!settings.contains("Interval")) {
+        settings.setValue("Interval", 1000);
     }
     settings.endGroup();
 

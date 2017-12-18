@@ -11,6 +11,10 @@
 class Client;
 class QTimer;
 
+/**
+ * fetches the list of pictures of a venue, download and caches the binary image data
+ * (knows all pictures of a venue, downloaded or not)
+ */
 class VenuePictures : public QObject
 {
 Q_OBJECT

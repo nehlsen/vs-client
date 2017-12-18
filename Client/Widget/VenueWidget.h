@@ -3,20 +3,22 @@
 
 #include <QtWidgets/QWidget>
 #include "CapturePublishWidget.h"
-#include "VenuePicturesWidget.h"
+
+class SlideShowWidget;
+class Client;
 
 class VenueWidget : public QWidget
 {
 Q_OBJECT
 
 public:
-    explicit VenueWidget(QWidget *parent = nullptr);
+    explicit VenueWidget(Client *client, QWidget *parent = nullptr);
 
     // display venue title
     // display venue pictures (extra widget)
     // grab and upload picture (extra widget)
 
-    VenuePicturesWidget *venuePicturesWidget;
+    SlideShowWidget *slideShowWidget;
     CapturePublishWidget *capturePublishWidget;
 };
 

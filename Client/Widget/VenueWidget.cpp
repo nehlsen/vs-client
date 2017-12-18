@@ -1,14 +1,15 @@
-#include <QtWidgets/QVBoxLayout>
 #include "VenueWidget.h"
+#include <QtWidgets/QVBoxLayout>
+#include <Client/Widget/SlideShowWidget.h>
 
-VenueWidget::VenueWidget(QWidget *parent) :
+VenueWidget::VenueWidget(Client *client, QWidget *parent) :
     QWidget(parent)
 {
-    venuePicturesWidget = new VenuePicturesWidget(this);
+    slideShowWidget = new SlideShowWidget(client, this);
     capturePublishWidget = new CapturePublishWidget(this);
 
     auto *layout = new QHBoxLayout(this);
-    layout->addWidget(venuePicturesWidget);
+    layout->addWidget(slideShowWidget);
     layout->addWidget(capturePublishWidget);
     setLayout(layout);
 }

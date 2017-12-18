@@ -2,9 +2,10 @@
 #include <QtCore/QDir>
 #include <QtCore/QSettings>
 #include <Client/Client.h>
-#include <Client/Model/VenuePictures.h>
-#include <Client/Widget/VenuePicturesWidget.h>
 #include <Client/Settings.h>
+#include <Client/Model/VenuePictures.h>
+#include <Client/Model/SlideShow.h>
+#include <Client/Widget/SlideShowWidget.h>
 #include "QsLog/QsLog.h"
 
 using namespace QsLogging;
@@ -36,6 +37,16 @@ Client* createClient()
     return client;
 }
 
+SlideShow *createSlideShow(Client *client)
+{
+    QSettings settings;
+
+    auto *slideShow = new SlideShow(client);
+    slideShow->setInterval(settings.value("SlideShow/Interval").toInt());
+
+    return slideShow;
+}
+
 int main(int argc, char **argv)
 {
     QApplication::setOrganizationName("nehlsen");
@@ -59,10 +70,10 @@ int main(int argc, char **argv)
 //    logger.addDestination(functorDestination);
 
     auto *client = createClient();
-    auto *display = new VenuePicturesWidget();
-    display->setVenuePictures(client->venuePictures());
-//    display->showFullScreen();
-    display->show();
+    auto *slideShow = createSlideShow(client);
+    auto *slideShowWidget = new SlideShowWidget(slideShow);
+//    slideShowWidget->showFullScreen();
+    slideShowWidget->show();
 
     int exitCode = app.exec();
     Logger::destroyInstance();

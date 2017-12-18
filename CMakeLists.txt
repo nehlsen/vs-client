@@ -42,6 +42,7 @@ set(VSC_CORE
         Client/Model/Venue.cpp
         Client/Model/VenuePicture.cpp
         Client/Model/VenuePictures.cpp
+        Client/Model/SlideShow.cpp
 )
 set(VSC_GUI
         Client/Widget/MainWindow.cpp
@@ -49,13 +50,13 @@ set(VSC_GUI
         Client/Widget/SelectVenueWidget.cpp
         Client/Widget/VenueWidget.cpp
         Client/Widget/CapturePublishWidget.cpp
-        Client/Widget/VenuePicturesWidget.cpp
+        Client/Widget/SlideShowWidget.cpp
 )
 
 set(VSC vsc.cpp)
 add_executable(vsc ${QSLOG} ${VSC_CORE} ${VSC_GUI} ${VSC})
 target_link_libraries(vsc Qt5::Widgets Qt5::Gui Qt5::Network Qt5::Multimedia Qt5::MultimediaWidgets)
 
-set(VSC_DISPLAY display.cpp Client/Widget/VenuePicturesWidget.cpp)
+set(VSC_DISPLAY display.cpp Client/Widget/SlideShowWidget.cpp)
 add_executable(display ${QSLOG} ${VSC_CORE} ${VSC_DISPLAY})
 target_link_libraries(display Qt5::Widgets Qt5::Gui Qt5::Network Qt5::Multimedia Qt5::MultimediaWidgets)
