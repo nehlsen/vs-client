@@ -67,6 +67,11 @@ void VenuePictures::setCacheFolder(const QString &folder)
 
 void VenuePictures::update()
 {
+    if (!m_client->venue().isValid()) {
+        QLOG_WARN() << "VenuePictures::update(), no venue selected, not starting update";
+        return;
+    }
+
     if (m_updateIsRunning) {
         QLOG_ERROR() << "VenuePictures::update(), update running, not starting new one";
         return;

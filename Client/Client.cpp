@@ -129,7 +129,6 @@ void Client::getVenuePictures(const QDateTime &createdAfter)
 
     QStringList parameters;
     parameters << venue().token();
-//    parameters << createdAfter.toString(Qt::ISODate);
     parameters << createdAfter.toString("yyyy-MM-ddTHH:mm:ss");
     m_endpointGetVenuePictures.setRequestParameters(server(), parameters);
     QNetworkRequest request = m_endpointGetVenuePictures.createRequest();
