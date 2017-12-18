@@ -6,15 +6,19 @@
 VenuePictures::VenuePictures(Client *client):
     m_client(client),
     m_autoFetchPicturesEnabled(false),
-    m_hasActiveDownload(false)
+    m_hasActiveDownload(false),
+    m_updateIsRunning(false)
 {
-    setCacheFolder(QDir::tempPath() + "/VenueShot/Cache");
-
     connect(m_client, &Client::venueChanged,
             this, &VenuePictures::onVenueChanged);
 
     connect(&m_nam, &QNetworkAccessManager::finished,
             this, &VenuePictures::onDownloadFinished);
+
+    m_autoUpdate = new QTimer(this);
+    m_autoUpdate->setSingleShot(false);
+    connect(m_autoUpdate, &QTimer::timeout,
+            this, &VenuePictures::onAutoUpdateTimeout);
 }
 
 void VenuePictures::setAutoFetchPicturesEnabled(bool enabled)
@@ -25,6 +29,27 @@ void VenuePictures::setAutoFetchPicturesEnabled(bool enabled)
 bool VenuePictures::isAutoFetchPicturesEnabled() const
 {
     return m_autoFetchPicturesEnabled;
+}
+
+void VenuePictures::setAutoUpdateInterval(int seconds)
+{
+    if (seconds >= 1) {
+        m_autoUpdate->start(seconds * 1000);
+        QLOG_INFO() << "VenuePictures::setAutoUpdateInterval(seconds:" << seconds << ")";
+    } else {
+        m_autoUpdate->stop();
+        QLOG_INFO() << "VenuePictures::setAutoUpdateInterval() DISABLED";
+    }
+}
+
+int VenuePictures::autoUpdateInterval() const
+{
+    return m_autoUpdate->interval();
+}
+
+bool VenuePictures::isAutoUpdateEnabled() const
+{
+    return m_autoUpdate->isActive();
 }
 
 void VenuePictures::setCacheFolder(const QString &folder)
@@ -42,25 +67,42 @@ void VenuePictures::setCacheFolder(const QString &folder)
 
 void VenuePictures::update()
 {
-    m_client->getVenuePictures();
+    if (m_updateIsRunning) {
+        QLOG_ERROR() << "VenuePictures::update(), update running, not starting new one";
+        return;
+    }
+    m_updateIsRunning = true;
+    
+    if (m_latestPictureCreated.isValid()) {
+        m_client->getVenuePictures(m_latestPictureCreated);
+    } else {
+        m_client->getVenuePictures();
+    }
 }
 
 void VenuePictures::readUpdate(const QList<VenuePicture> &pictureList)
 {
-    // for now just replace
-    //  later on try to calculate diffs and issue signals appropriately
-//    m_pictureList = pictureList;
-//    emit picturesAdded(m_pictureList);
-
     QLOG_INFO() << "VenuePictures::readUpdate, count:" << pictureList.size();
 
-    for (VenuePicture vp : pictureList) {
+    for (const VenuePicture &vp : pictureList) {
+        if (hasPicture(vp)) {
+            // we already now this one, skip it
+            continue;
+        }
+
         if (isCached(vp)) {
             setPictureReady(vp);
         } else {
             addToDownloadQueue(vp);
         }
     }
+
+    // FIXME possible race condition?
+    //  100 pictures added to DL queue, update-running marked as false
+    //  new update started (because update-running is false)
+    //   99 of the 100 are added again
+    //  queue grows indefinitely?
+    m_updateIsRunning = false;
 }
 
 void VenuePictures::onVenueChanged(const Venue &venue)
@@ -117,34 +159,65 @@ void VenuePictures::onDownloadFinished(QNetworkReply *reply)
 bool VenuePictures::startNextDownload()
 {
     if (m_hasActiveDownload) {
-        QLOG_WARN() << "VenuePictures::startNextDownload, tried to start new download while one is running";
+        QLOG_WARN() << "VenuePictures::startNextDownload(), tried to start new download while one is running";
         return false;
     }
     if (m_downloadQueue.isEmpty()) {
-        QLOG_WARN() << "VenuePictures::startNextDownload, can not start new download, queue is empty";
+        QLOG_WARN() << "VenuePictures::startNextDownload(), can not start new download, queue is empty";
         return false;
     }
 
-    const VenuePicture &vp = m_downloadQueue.head();
-    QNetworkRequest request(vp.uri());
-    QNetworkReply *reply = m_nam.get(request);
+    const VenuePicture &picture = m_downloadQueue.head();
+    if (isCached(picture)) {
+        QLOG_INFO() << "VenuePictures::startNextDownload(), already in cache! set-ready, dequeue and bail";
+
+        // if picture has been download after being added to the queue and prior to this call
+        //  unlikely but to prevent any race conditions
+        if (!hasPicture(picture)) {
+            setPictureReady(picture);
+        }
+        // remove and exit
+        m_downloadQueue.dequeue();
+        QTimer::singleShot(100, this, &VenuePictures::startNextDownload);
+    }
+
+    m_nam.get(QNetworkRequest(picture.uri()));
     m_hasActiveDownload = true;
 
-    QLOG_INFO() << "VenuePictures::startNextDownload, download started:" << vp.uri();
+    QLOG_INFO() << "VenuePictures::startNextDownload, download started:" << picture.uri();
 
     return true;
 }
 
+void VenuePictures::onAutoUpdateTimeout()
+{
+    QLOG_TRACE() << "VenuePictures::onAutoUpdateTimeout()";
+    update();
+}
+
+bool VenuePictures::hasPicture(const VenuePicture &picture) const
+{
+    return m_pictures.contains(picture.hash());
+}
+
 void VenuePictures::clearPictureList()
 {
-    m_pictureList.clear();
+    m_pictures.clear();
+    m_latestPictureCreated = QDateTime();
 //    emit pictureListCleared();
 }
 
 void VenuePictures::setPictureReady(VenuePicture picture)
 {
     picture.setLocalPath(cachePath(picture));
-    m_pictureList << picture;
+    m_pictures[picture.hash()] = picture;
+
+    if (!m_latestPictureCreated.isValid() || m_latestPictureCreated < picture.createdAt()) {
+        m_latestPictureCreated = picture.createdAt();
+    }
+
+    QLOG_INFO() << "VenuePictures::setPictureReady() new picture ready:" << picture.localPath();
+
     emit pictureReady(picture);
 }
 

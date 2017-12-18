@@ -2,6 +2,7 @@
 #include <QtCore/QDir>
 #include <QtCore/QSettings>
 #include <Client/Client.h>
+#include <Client/Model/VenuePictures.h>
 #include <Client/Widget/VenuePicturesWidget.h>
 #include <Client/Settings.h>
 #include "QsLog/QsLog.h"
@@ -16,7 +17,9 @@ Client* createClient()
 
     auto *client = new Client();
     client->setServer(settings.value("Server/Url").toString());
-    client->setAutoFetchPicturesEnabled(settings.value("Config/AutoFetchEnabled").toBool());
+    client->venuePictures()->setAutoFetchPicturesEnabled(settings.value("Config/AutoFetchEnabled").toBool());
+    client->venuePictures()->setAutoUpdateInterval(settings.value("Config/AutoUpdateInterval").toInt());
+    client->venuePictures()->setCacheFolder(settings.value("Local/CacheFolder").toString());
 
     QString venue = settings.value("Server/Venue").toString();
     QObject::connect(

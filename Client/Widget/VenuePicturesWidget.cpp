@@ -14,6 +14,7 @@ VenuePicturesWidget::VenuePicturesWidget(QWidget *parent) :
     m_pictureDisplay->setBackgroundRole(QPalette::Base);
     m_pictureDisplay->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
     m_pictureDisplay->setScaledContents(true);
+    onPictureListCleared();
 
     auto *layout = new QVBoxLayout();
     layout->setMargin(0);
@@ -34,8 +35,17 @@ void VenuePicturesWidget::setVenuePictures(VenuePictures *venuePictures)
     Q_ASSERT(nullptr == m_venuePictures);
 
     m_venuePictures = venuePictures;
+    connect(m_venuePictures, &VenuePictures::pictureListCleared,
+            this, &VenuePicturesWidget::onPictureListCleared);
     connect(m_venuePictures, &VenuePictures::pictureReady,
             this, &VenuePicturesWidget::onPictureReady);
+}
+
+void VenuePicturesWidget::onPictureListCleared()
+{
+    m_pictures.clear();
+    m_picturesCurrentIndex = -1;
+    m_pictureDisplay->setText(tr("No Pictures available"));
 }
 
 void VenuePicturesWidget::onPictureReady(const VenuePicture &pictures)

@@ -13,7 +13,7 @@ public:
     bool parseResponse(int httpStatusCode, const QByteArray &responseBody) override;
 
 protected:
-    virtual bool handleJsonDocument(const QJsonDocument &document);
+    virtual bool handleJsonDocument(const QJsonDocument &document) = 0;
     void addJsonContentHeader(QNetworkRequest &request);
 };
 

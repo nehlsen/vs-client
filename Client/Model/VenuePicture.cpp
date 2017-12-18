@@ -1,5 +1,16 @@
 #include "VenuePicture.h"
 #include <QsLog/QsLog.h>
+#include <QtCore/QCryptographicHash>
+
+QString VenuePicture::hash() const
+{
+    if (!isValid()) {
+        return QString();
+    }
+
+    QByteArray hash = QCryptographicHash::hash(uri().toLatin1(), QCryptographicHash::Sha1);
+    return QString::fromLatin1(hash);
+}
 
 QString VenuePicture::uri() const
 {

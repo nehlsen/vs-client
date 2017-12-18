@@ -1,4 +1,5 @@
 #include <QtCore/QJsonObject>
+#include <QsLog/QsLog.h>
 #include "LinkPicture.h"
 
 #define LINK_PICTURE_URL DEV_MODE_PREFIX "/api/v1/venues/%1/pictures.json"
@@ -22,11 +23,7 @@ QJsonDocument LinkPicture::payload()
     return QJsonDocument(payload);
 }
 
-bool LinkPicture::isMatch(const QUrl &requestUrl)
+bool LinkPicture::handleJsonDocument(const QJsonDocument &document)
 {
-    if (requestParameters().isEmpty()) {
-        return false;
-    }
-
-    return requestUrl.toString().contains(QString(LINK_PICTURE_URL).arg(requestParameters().at(0)));
+    return false;
 }

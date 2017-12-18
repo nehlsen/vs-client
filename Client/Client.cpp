@@ -32,16 +32,6 @@ bool Client::isTokenAutoRefreshEnabled() const
     return m_autoRefreshEnabled;
 }
 
-void Client::setAutoFetchPicturesEnabled(bool enabled)
-{
-    m_venuePictures->setAutoFetchPicturesEnabled(enabled);
-}
-
-bool Client::isAutoFetchPicturesEnabled() const
-{
-    return m_venuePictures->isAutoFetchPicturesEnabled();
-}
-
 Client::Status Client::status() const
 {
     Status status = Offline;
@@ -66,7 +56,9 @@ void Client::setVenue(const QString &venueToken)
     QLOG_TRACE() << "Client::setVenue(" << venueToken << ")";
 
     m_endpointGetVenue.setRequestParameters(server(), QStringList() << venueToken);
-    get(addAuthHeader(m_endpointGetVenue.createRequest()));
+    QNetworkRequest request = m_endpointGetVenue.createRequest();
+    request.setOriginatingObject(&m_endpointGetVenue);
+    get(addAuthHeader(request));
 }
 
 Venue Client::venue() const
@@ -84,7 +76,9 @@ void Client::acquireToken(const QString &username, const QString &password)
     QLOG_TRACE() << "Client::acquireToken";
 
     m_endpointAcquireToken.setRequestParameters(server(), QStringList() << username << password);
-    post(m_endpointAcquireToken.createRequest(), m_endpointAcquireToken.payload());
+    QNetworkRequest request = m_endpointAcquireToken.createRequest();
+    request.setOriginatingObject(&m_endpointAcquireToken);
+    post(request, m_endpointAcquireToken.payload());
 }
 
 void Client::postPicture(const QImage &image)
@@ -92,7 +86,9 @@ void Client::postPicture(const QImage &image)
     QLOG_TRACE() << "Client::postPicture";
 
     m_endpointPostPicture.setRequestParameters(server(), QStringList());
-    post(addAuthHeader(m_endpointPostPicture.createRequest()), m_endpointPostPicture.payload(image));
+    QNetworkRequest request = m_endpointPostPicture.createRequest();
+    request.setOriginatingObject(&m_endpointPostPicture);
+    post(addAuthHeader(request), m_endpointPostPicture.payload(image));
 }
 
 void Client::linkPicture(const QString &publicPictureLocation)
@@ -104,15 +100,41 @@ void Client::linkPicture(const QString &publicPictureLocation)
                << publicPictureLocation;
 
     m_endpointLinkPicture.setRequestParameters(server(), parameters);
-    post(addAuthHeader(m_endpointLinkPicture.createRequest()), m_endpointLinkPicture.payload());
+    QNetworkRequest request = m_endpointLinkPicture.createRequest();
+    request.setOriginatingObject(&m_endpointLinkPicture);
+    post(addAuthHeader(request), m_endpointLinkPicture.payload());
 }
 
 void Client::getVenuePictures()
 {
     QLOG_TRACE() << "Client::getVenuePictures()";
+    if (!venue().isValid()) {
+        QLOG_ERROR() << "can not fetch pictures without a valid venue!";
+        return;
+    }
 
     m_endpointGetVenuePictures.setRequestParameters(server(), QStringList() << venue().token());
-    get(addAuthHeader(m_endpointGetVenuePictures.createRequest()));
+    QNetworkRequest request = m_endpointGetVenuePictures.createRequest();
+    request.setOriginatingObject(&m_endpointGetVenuePictures);
+    get(addAuthHeader(request));
+}
+
+void Client::getVenuePictures(const QDateTime &createdAfter)
+{
+    QLOG_TRACE() << "Client::getVenuePictures(createdAfter:" << createdAfter << ")";
+    if (!venue().isValid()) {
+        QLOG_ERROR() << "can not fetch pictures without a valid venue!";
+        return;
+    }
+
+    QStringList parameters;
+    parameters << venue().token();
+//    parameters << createdAfter.toString(Qt::ISODate);
+    parameters << createdAfter.toString("yyyy-MM-ddTHH:mm:ss");
+    m_endpointGetVenuePictures.setRequestParameters(server(), parameters);
+    QNetworkRequest request = m_endpointGetVenuePictures.createRequest();
+    request.setOriginatingObject(&m_endpointGetVenuePictures);
+    get(addAuthHeader(request));
 }
 
 void Client::requestFinished()
@@ -124,22 +146,25 @@ void Client::requestFinished()
         return;
     }
 
-    if (m_endpointAcquireToken.isMatch(reply)) {
+    auto *origin = reply->request().originatingObject();
+    if (origin == dynamic_cast<QObject*>(&m_endpointAcquireToken)) {
         m_endpointAcquireToken.parseResponse(reply);
         setToken(m_endpointAcquireToken.token());
-    } else if (m_endpointGetVenue.isMatch(reply)) {
+    } else if (origin == dynamic_cast<QObject*>(&m_endpointGetVenue)) {
         m_endpointGetVenue.parseResponse(reply);
         setVenue(m_endpointGetVenue.venue());
-    } else if (m_endpointPostPicture.isMatch(reply)) {
+    } else if (origin == dynamic_cast<QObject*>(&m_endpointPostPicture)) {
         m_endpointPostPicture.parseResponse(reply);
         emit pictureUploaded(m_endpointPostPicture.publicLocation());
         linkPicture(m_endpointPostPicture.publicLocation());
-    } else if (m_endpointLinkPicture.isMatch(reply)) {
+    } else if (origin == dynamic_cast<QObject*>(&m_endpointLinkPicture)) {
         m_endpointLinkPicture.parseResponse(reply);
         emit pictureLinked();
-    } else if (m_endpointGetVenuePictures.isMatch(reply)) {
+    } else if (origin == dynamic_cast<QObject*>(&m_endpointGetVenuePictures)) {
         m_endpointGetVenuePictures.parseResponse(reply);
         m_venuePictures->readUpdate(m_endpointGetVenuePictures.venuePictures());
+    } else {
+        QLOG_TRACE() << "Client::requestFinished(), failed to select appropriate endpoint to handle response!";
     }
 }
 

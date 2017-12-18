@@ -9,9 +9,6 @@ class GetVenuePictures : public Endpoint
 public:
     QNetworkRequest createRequest() override;
 
-    using Endpoint::isMatch;
-    bool isMatch(const QUrl &requestUrl) override;
-
     QList<VenuePicture> venuePictures();
 
 protected:

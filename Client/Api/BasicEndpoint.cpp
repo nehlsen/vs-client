@@ -18,17 +18,8 @@ QStringList BasicEndpoint::requestParameters() const
     return m_requestParameters;
 }
 
-bool BasicEndpoint::isMatch(QNetworkReply *reply)
-{
-    const QUrl &requestUrl = reply->request().url();
-
-    return isMatch(requestUrl);
-}
-
 bool BasicEndpoint::parseResponse(QNetworkReply *reply)
 {
-    QLOG_TRACE() << "BasicEndpoint::parseResponse(reply)";
-
     const int httpStatusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
     const QUrl &requestUrl = reply->request().url();
 
@@ -36,9 +27,9 @@ bool BasicEndpoint::parseResponse(QNetworkReply *reply)
                 << httpStatusCode
                 << reply->attribute(QNetworkRequest::HttpReasonPhraseAttribute).toString();
 
-            foreach(QByteArray key, reply->rawHeaderList()) {
-            QLOG_DEBUG() << "\t" << key << reply->rawHeader(key);
-        }
+    foreach(QByteArray key, reply->rawHeaderList()) {
+        QLOG_DEBUG() << "\t" << key << reply->rawHeader(key);
+    }
 
     const QByteArray responseBody = reply->readAll();
     QLOG_TRACE() << responseBody;

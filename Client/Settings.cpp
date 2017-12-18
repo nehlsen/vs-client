@@ -31,6 +31,9 @@ void Settings::setDefaults()
     if (!settings.contains("AutoFetchEnabled")) {
         settings.setValue("AutoFetchEnabled", true);
     }
+    if (!settings.contains("AutoUpdateInterval")) {
+        settings.setValue("AutoUpdateInterval", 10);
+    }
     settings.endGroup();
 
     settings.beginGroup("Display");

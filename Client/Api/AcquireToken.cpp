@@ -1,3 +1,4 @@
+#include <QsLog/QsLog.h>
 #include "AcquireToken.h"
 
 #define ACQUIRE_TOKEN_URL DEV_MODE_PREFIX "/api/login_check"
@@ -17,11 +18,6 @@ QJsonDocument AcquireToken::payload()
     payload["_password"] = requestParameters().at(1);
 
     return QJsonDocument(payload);
-}
-
-bool AcquireToken::isMatch(const QUrl &requestUrl)
-{
-    return requestUrl.toString().contains(ACQUIRE_TOKEN_URL);
 }
 
 JwtToken AcquireToken::token() const

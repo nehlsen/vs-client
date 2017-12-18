@@ -1,3 +1,4 @@
+#include <QsLog/QsLog.h>
 #include "GetVenue.h"
 
 #define GET_VENUE_URL DEV_MODE_PREFIX "/api/v1/venues/%1.json"
@@ -17,15 +18,6 @@ bool GetVenue::handleJsonDocument(const QJsonDocument &document)
     m_venue = Venue::fromJsonObject(document.object());
 
     return m_venue.isValid();
-}
-
-bool GetVenue::isMatch(const QUrl &requestUrl)
-{
-    if (requestParameters().isEmpty()) {
-        return false;
-    }
-
-    return requestUrl.toString().contains(QString(GET_VENUE_URL).arg(requestParameters().at(0)));
 }
 
 Venue GetVenue::venue() const

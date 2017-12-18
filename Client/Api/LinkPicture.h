@@ -9,8 +9,8 @@ public:
     QNetworkRequest createRequest() override;
     QJsonDocument payload() override;
 
-    using Endpoint::isMatch;
-    bool isMatch(const QUrl &requestUrl) override;
+protected:
+    bool handleJsonDocument(const QJsonDocument &document) override;
 };
 
 #endif // VSC_LINKPICTURE_H

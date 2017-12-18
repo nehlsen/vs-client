@@ -8,6 +8,10 @@ QNetworkRequest GetVenuePictures::createRequest()
 {
     QString query = QString(GET_VENUE_PICTURES_URL).arg(requestParameters().at(0));
 
+    if (requestParameters().size() > 1) {
+        query += "?created-after=" + requestParameters().at(1);
+    }
+
     QNetworkRequest request(QUrl(server() + query));
     addJsonContentHeader(request);
 
@@ -36,15 +40,6 @@ bool GetVenuePictures::handleJsonDocument(const QJsonDocument &document)
     }
 
     return true;
-}
-
-bool GetVenuePictures::isMatch(const QUrl &requestUrl)
-{
-    if (requestParameters().isEmpty()) {
-        return false;
-    }
-
-    return requestUrl.toString().contains(QString(GET_VENUE_PICTURES_URL).arg(requestParameters().at(0)));
 }
 
 QList<VenuePicture> GetVenuePictures::venuePictures()

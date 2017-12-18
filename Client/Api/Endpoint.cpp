@@ -15,16 +15,11 @@ bool Endpoint::parseResponse(int httpStatusCode, const QByteArray &responseBody)
 
     QJsonDocument response = QJsonDocument::fromJson(responseBody);
     if (response.isEmpty()) {
-        QLOG_ERROR() << "Endpoint::parseResponse: Response is empty JSON";
+        QLOG_WARN() << "Endpoint::parseResponse: Response is empty JSON";
         return false;
     }
 
     return handleJsonDocument(response);
-}
-
-bool Endpoint::handleJsonDocument(const QJsonDocument &document)
-{
-    return false;
 }
 
 void Endpoint::addJsonContentHeader(QNetworkRequest &request)

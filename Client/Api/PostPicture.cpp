@@ -53,11 +53,6 @@ QHttpMultiPart *PostPicture::payload(const QImage &image)
     return m_payload;
 }
 
-bool PostPicture::isMatch(const QUrl &requestUrl)
-{
-    return requestUrl.toString().contains(POST_PICTURE_URL);
-}
-
 bool PostPicture::parseResponse(QNetworkReply *reply)
 {
     m_publicLocation.clear();

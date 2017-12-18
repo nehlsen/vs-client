@@ -11,9 +11,6 @@ public:
     QNetworkRequest createRequest() override;
     QJsonDocument payload() override;
 
-    using Endpoint::isMatch;
-    bool isMatch(const QUrl &requestUrl) override;
-
     JwtToken token() const;
 protected:
     bool handleJsonDocument(const QJsonDocument &document) override;

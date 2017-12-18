@@ -10,7 +10,6 @@ MainWindow::MainWindow(QWidget *parent) :
     QStackedWidget(parent)
 {
     m_client = new Client(this);
-    m_client->setAutoFetchPicturesEnabled(true);
     connect(m_client, &Client::statusChanged,
             this, &MainWindow::onClientStatusChanged);
 
@@ -68,6 +67,8 @@ void MainWindow::loadSettings()
 
     QSettings settings;
     m_client->setServer(settings.value("Server/Url").toString());
+    m_client->venuePictures()->setAutoFetchPicturesEnabled(settings.value("Config/AutoFetchEnabled").toBool());
+    m_client->venuePictures()->setAutoUpdateInterval(settings.value("Config/AutoUpdateInterval").toInt());
     m_client->venuePictures()->setCacheFolder(settings.value("Local/CacheFolder").toString());
     m_loginWidget->editUsername->setText(settings.value("Server/Username").toString());
     m_loginWidget->editPassword->setText(settings.value("Server/Password").toString());

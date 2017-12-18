@@ -34,9 +34,6 @@ public:
     void setTokenAutoRefreshEnabled(bool enabled = true);
     bool isTokenAutoRefreshEnabled() const;
 
-    void setAutoFetchPicturesEnabled(bool enabled = true);
-    bool isAutoFetchPicturesEnabled() const;
-
     Status status() const;
 
     JwtToken token() const;
@@ -65,6 +62,7 @@ public slots:
      * retrieve Pictures for current venue
      */
     void getVenuePictures();
+    void getVenuePictures(const QDateTime &createdAfter);
 
 signals:
     void tokenChanged(const JwtToken &token);

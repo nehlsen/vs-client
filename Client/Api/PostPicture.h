@@ -14,8 +14,6 @@ public:
     QNetworkRequest createRequest() override;
     QHttpMultiPart *payload(const QImage &image);
 
-    using BasicEndpoint::isMatch;
-    bool isMatch(const QUrl &requestUrl) override;
     bool parseResponse(QNetworkReply *reply) override;
     bool parseResponse(int httpStatusCode, const QByteArray &responseBody) override;
 

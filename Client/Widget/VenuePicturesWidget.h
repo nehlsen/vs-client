@@ -16,6 +16,7 @@ public:
     void setVenuePictures(VenuePictures *venuePictures);
 
 protected slots:
+    void onPictureListCleared();
     void onPictureReady(const VenuePicture &pictures);
 
     void advancePicture();

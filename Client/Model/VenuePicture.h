@@ -11,6 +11,9 @@
 class VenuePicture : public BasicEntity
 {
 public:
+    // get something uniquely identifying this picture
+    QString hash() const;
+
     QString uri() const;
 
     bool isValid() const;

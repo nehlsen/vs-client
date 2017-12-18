@@ -8,16 +8,16 @@
 
 class QNetworkReply;
 
-class BasicEndpoint
+class BasicEndpoint : public QObject
 {
+Q_OBJECT
+
 public:
     void setRequestParameters(const QString &server, const QStringList &parameters);
     QString server() const;
     QStringList requestParameters() const;
     virtual QNetworkRequest createRequest() = 0;
 
-    virtual bool isMatch(QNetworkReply *reply);
-    virtual bool isMatch(const QUrl &requestUrl) = 0;
     virtual bool parseResponse(QNetworkReply *reply);
     virtual bool parseResponse(int httpStatusCode, const QByteArray &responseBody) = 0;
 
