@@ -16,7 +16,7 @@ find_package(Qt5MultimediaWidgets)
 #find_package(Qt5SerialPort)
 #find_package(Qt5Sql)
 #find_package(Qt5Qml)
-#find_package(Qt5Quick)
+find_package(Qt5Quick)
 #find_package(Qt5Charts)
 
 set(QSLOG
@@ -42,6 +42,7 @@ set(VSC_CORE
         Client/Model/Venue.cpp
         Client/Model/VenuePicture.cpp
         Client/Model/VenuePictures.cpp
+        Client/Model/VenuePicturesModel.cpp
         Client/Model/SlideShow.cpp
 )
 set(VSC_GUI
@@ -60,3 +61,7 @@ target_link_libraries(vsc Qt5::Widgets Qt5::Gui Qt5::Network Qt5::Multimedia Qt5
 set(VSC_DISPLAY display.cpp Client/Widget/SlideShowWidget.cpp)
 add_executable(display ${QSLOG} ${VSC_CORE} ${VSC_DISPLAY})
 target_link_libraries(display Qt5::Widgets Qt5::Gui Qt5::Network Qt5::Multimedia Qt5::MultimediaWidgets)
+
+set(VSC_QML_DISPLAY qmlDisplay.cpp)
+add_executable(qmlDisplay ${QSLOG} ${VSC_CORE} ${VSC_QML_DISPLAY})
+target_link_libraries(qmlDisplay Qt5::Widgets Qt5::Gui Qt5::Network Qt5::Multimedia Qt5::MultimediaWidgets Qt5::Quick)
