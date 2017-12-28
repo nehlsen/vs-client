@@ -1,13 +1,13 @@
 #ifndef VSC_VENUEPICTURE_H
 #define VSC_VENUEPICTURE_H
 
-// currently, this contains only the picture URI
-//   later it will contain createdAt/By, Rating, comments....
-
 #include <QtCore/QString>
 #include <QtCore/QJsonObject>
+#include <QtCore/QMetaType>
 #include "BasicEntity.h"
 
+// currently, this contains only the picture URI
+//   later it will contain createdAt/By, Rating, comments....
 class VenuePicture : public BasicEntity
 {
 public:

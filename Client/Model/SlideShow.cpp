@@ -32,6 +32,15 @@ int SlideShow::interval() const
     return m_delayAdvancePicture->interval();
 }
 
+VenuePicture SlideShow::currentPicture() const
+{
+    if (m_picturesCurrentIndex >= 0) {
+        return m_pictures.at(m_picturesCurrentIndex);
+    }
+
+    return VenuePicture();
+}
+
 int SlideShow::currentPictureIndex() const
 {
     return m_picturesCurrentIndex;

@@ -14,6 +14,7 @@ class QTimer;
 class SlideShow : public QObject
 {
 Q_OBJECT
+Q_PROPERTY(VenuePicture currentPicture READ currentPicture NOTIFY showPicture)
 
 public:
     explicit SlideShow(QObject *parent = nullptr);
@@ -23,6 +24,7 @@ public:
     void setInterval(int msec);
     int interval() const;
 
+    VenuePicture currentPicture() const;
     int currentPictureIndex() const;
     int countPictures() const;
 
