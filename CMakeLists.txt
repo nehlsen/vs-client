@@ -75,7 +75,3 @@ target_link_libraries(qmlDisplayModel vscLib)
 
 add_executable(qmlDisplayBridge qmlDisplayBridge.cpp)
 target_link_libraries(qmlDisplayBridge vscLib)
-
-set(VSC_QML_DISPLAY qmlDisplay.cpp)
-add_executable(qmlDisplay ${QSLOG} ${VSC_CORE} ${VSC_QML_DISPLAY})
-target_link_libraries(qmlDisplay Qt5::Widgets Qt5::Gui Qt5::Network Qt5::Multimedia Qt5::MultimediaWidgets Qt5::Quick)
