@@ -56,15 +56,15 @@ QVariant VenuePicturesModel::data(const QModelIndex &index, int role) const
 
     if (role == Qt::DisplayRole) {
         switch (index.column()) {
-            case 0: return m_pictures.at(index.row()).hash();
-            case 1: return m_pictures.at(index.row()).localPath();
-            case 2: return m_pictures.at(index.row()).createdBy();
+            case 0: return m_pictures.at(index.row())->hash();
+            case 1: return m_pictures.at(index.row())->localPath();
+            case 2: return m_pictures.at(index.row())->createdBy();
         }
     } else {
         switch (role) {
-            case HashRole: return m_pictures.at(index.row()).hash();
-            case LocalPathRole: return m_pictures.at(index.row()).localPath();
-            case CreatedByRole: return m_pictures.at(index.row()).createdBy();
+            case HashRole: return m_pictures.at(index.row())->hash();
+            case LocalPathRole: return m_pictures.at(index.row())->localPath();
+            case CreatedByRole: return m_pictures.at(index.row())->createdBy();
         }
     }
 
@@ -87,7 +87,7 @@ void VenuePicturesModel::onListCleared()
     endResetModel();
 }
 
-void VenuePicturesModel::onPictureReady(const VenuePicture &picture)
+void VenuePicturesModel::onPictureReady(const VenuePicture *picture)
 {
     beginInsertRows(QModelIndex(), rowCount(QModelIndex()), rowCount(QModelIndex()));
     m_pictures.append(picture);

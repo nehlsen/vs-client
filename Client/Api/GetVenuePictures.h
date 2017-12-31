@@ -8,13 +8,12 @@ class GetVenuePictures : public Endpoint
 {
 public:
     QNetworkRequest createRequest() override;
-
-    QList<VenuePicture> venuePictures();
+    QList<VenuePicture*> venuePictures();
 
 protected:
     bool handleJsonDocument(const QJsonDocument &document) override;
 
-    QList<VenuePicture> m_venuePictures;
+    QList<VenuePicture*> m_venuePictures;
 };
 
 #endif // VSC_GETVENUEPICTURES_H

@@ -10,6 +10,12 @@
 //   later it will contain createdAt/By, Rating, comments....
 class VenuePicture : public BasicEntity
 {
+Q_OBJECT
+Q_PROPERTY(QString hash READ hash)
+Q_PROPERTY(QString uri READ uri)
+Q_PROPERTY(bool valid READ isValid)
+Q_PROPERTY(QString localPath READ localPath)
+
 public:
     // get something uniquely identifying this picture
     QString hash() const;
@@ -18,7 +24,7 @@ public:
 
     bool isValid() const;
 
-    static VenuePicture fromJsonObject(const QJsonObject &jsonObject);
+    static VenuePicture* fromJsonObject(const QJsonObject &jsonObject);
 
     void setLocalPath(const QString &path);
     QString localPath() const;

@@ -13,12 +13,12 @@ class SlideShowWidget : public QWidget
 Q_OBJECT
 
 public:
-    SlideShowWidget(SlideShow *slideShow, QWidget *parent = nullptr);
-    SlideShowWidget(Client *client, QWidget *parent = nullptr);
+    explicit SlideShowWidget(SlideShow *slideShow, QWidget *parent = nullptr);
+    explicit SlideShowWidget(Client *client, QWidget *parent = nullptr);
 
 public slots:
     void reset();
-    void onShowPicture(const VenuePicture &picture);
+    void onShowPicture(const VenuePicture *picture);
 
 protected:
     void initLayout();

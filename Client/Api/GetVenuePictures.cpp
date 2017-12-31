@@ -33,8 +33,8 @@ bool GetVenuePictures::handleJsonDocument(const QJsonDocument &document)
     }
 
     for (int i = 0; i < document.array().size(); ++i) {
-        VenuePicture picture = VenuePicture::fromJsonObject(document.array().at(i).toObject());
-        if (picture.isValid()) {
+        auto picture = VenuePicture::fromJsonObject(document.array().at(i).toObject());
+        if (picture->isValid()) {
             m_venuePictures << picture;
         }
     }
@@ -42,7 +42,7 @@ bool GetVenuePictures::handleJsonDocument(const QJsonDocument &document)
     return true;
 }
 
-QList<VenuePicture> GetVenuePictures::venuePictures()
+QList<VenuePicture*> GetVenuePictures::venuePictures()
 {
     return m_venuePictures;
 }

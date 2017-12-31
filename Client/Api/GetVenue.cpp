@@ -3,6 +3,11 @@
 
 #define GET_VENUE_URL DEV_MODE_PREFIX "/api/v1/venues/%1.json"
 
+GetVenue::GetVenue():
+    m_venue(new Venue)
+{
+}
+
 QNetworkRequest GetVenue::createRequest()
 {
     QString query = QString(GET_VENUE_URL).arg(requestParameters().at(0));
@@ -17,10 +22,10 @@ bool GetVenue::handleJsonDocument(const QJsonDocument &document)
 {
     m_venue = Venue::fromJsonObject(document.object());
 
-    return m_venue.isValid();
+    return m_venue->isValid();
 }
 
-Venue GetVenue::venue() const
+Venue* GetVenue::venue() const
 {
     return m_venue;
 }

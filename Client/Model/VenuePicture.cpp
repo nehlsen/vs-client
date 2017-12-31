@@ -22,20 +22,20 @@ bool VenuePicture::isValid() const
     return !uri().isEmpty();
 }
 
-VenuePicture VenuePicture::fromJsonObject(const QJsonObject &jsonObject)
+VenuePicture* VenuePicture::fromJsonObject(const QJsonObject &jsonObject)
 {
     QLOG_TRACE() << "VenuePicture::fromJsonObject()";
 
-    VenuePicture picture;
+    auto picture = new VenuePicture;
 
     if (!jsonObject.contains(QLatin1String("uri"))) {
         QLOG_ERROR() << "missing uri element";
         return picture;
     }
 
-    picture.m_uri = jsonObject.value(QLatin1String("uri")).toString();
+    picture->m_uri = jsonObject.value(QLatin1String("uri")).toString();
 //    QLOG_TRACE() << "\t" << picture.m_uri;
-    picture.readBasicAttributes(jsonObject);
+    picture->readBasicAttributes(jsonObject);
 
     return picture;
 }

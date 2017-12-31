@@ -65,9 +65,14 @@ void VenuePictures::setCacheFolder(const QString &folder)
     QLOG_INFO() << "VenuePictures::setCacheFolder(" << folder << "), saving cache files to: " << m_cacheFolder.absolutePath();
 }
 
+QString VenuePictures::cacheFolder() const
+{
+    return m_cacheFolder.absolutePath();
+}
+
 void VenuePictures::update()
 {
-    if (!m_client->venue().isValid()) {
+    if (!m_client->venue()->isValid()) {
         QLOG_WARN() << "VenuePictures::update(), no venue selected, not starting update";
         return;
     }
@@ -85,11 +90,11 @@ void VenuePictures::update()
     }
 }
 
-void VenuePictures::readUpdate(const QList<VenuePicture> &pictureList)
+void VenuePictures::readUpdate(const QList<VenuePicture*> &pictureList)
 {
     QLOG_INFO() << "VenuePictures::readUpdate, count:" << pictureList.size();
 
-    for (const VenuePicture &vp : pictureList) {
+    for (VenuePicture *vp : pictureList) {
         if (hasPicture(vp)) {
             // we already now this one, skip it
             continue;
@@ -110,7 +115,7 @@ void VenuePictures::readUpdate(const QList<VenuePicture> &pictureList)
     m_updateIsRunning = false;
 }
 
-void VenuePictures::onVenueChanged(const Venue &venue)
+void VenuePictures::onVenueChanged(const Venue *venue)
 {
     clearPictureList();
     if (isAutoFetchPicturesEnabled()) {
@@ -172,7 +177,7 @@ bool VenuePictures::startNextDownload()
         return false;
     }
 
-    const VenuePicture &picture = m_downloadQueue.head();
+    auto picture = m_downloadQueue.head();
     if (isCached(picture)) {
         QLOG_INFO() << "VenuePictures::startNextDownload(), already in cache! set-ready, dequeue and bail";
 
@@ -186,10 +191,10 @@ bool VenuePictures::startNextDownload()
         QTimer::singleShot(100, this, &VenuePictures::startNextDownload);
     }
 
-    m_nam.get(QNetworkRequest(picture.uri()));
+    m_nam.get(QNetworkRequest(picture->uri()));
     m_hasActiveDownload = true;
 
-    QLOG_INFO() << "VenuePictures::startNextDownload, download started:" << picture.uri();
+    QLOG_INFO() << "VenuePictures::startNextDownload, download started:" << picture->uri();
 
     return true;
 }
@@ -200,9 +205,9 @@ void VenuePictures::onAutoUpdateTimeout()
     update();
 }
 
-bool VenuePictures::hasPicture(const VenuePicture &picture) const
+bool VenuePictures::hasPicture(const VenuePicture *picture) const
 {
-    return m_pictures.contains(picture.hash());
+    return m_pictures.contains(picture->hash());
 }
 
 void VenuePictures::clearPictureList()
@@ -212,23 +217,23 @@ void VenuePictures::clearPictureList()
 //    emit pictureListCleared();
 }
 
-void VenuePictures::setPictureReady(VenuePicture picture)
+void VenuePictures::setPictureReady(VenuePicture *picture)
 {
-    picture.setLocalPath(cachePath(picture));
-    m_pictures[picture.hash()] = picture;
+    picture->setLocalPath(cachePath(picture));
+    m_pictures[picture->hash()] = picture;
 
-    if (!m_latestPictureCreated.isValid() || m_latestPictureCreated < picture.createdAt()) {
-        m_latestPictureCreated = picture.createdAt();
+    if (!m_latestPictureCreated.isValid() || m_latestPictureCreated < picture->createdAt()) {
+        m_latestPictureCreated = picture->createdAt();
     }
 
-    QLOG_INFO() << "VenuePictures::setPictureReady() new picture ready:" << picture.localPath();
+    QLOG_INFO() << "VenuePictures::setPictureReady() new picture ready:" << picture->localPath();
 
     emit pictureReady(picture);
 }
 
-void VenuePictures::addToDownloadQueue(const VenuePicture &picture)
+void VenuePictures::addToDownloadQueue(VenuePicture *picture)
 {
-    QLOG_INFO() << "VenuePictures::addToDownloadQueue(" << picture.uri() << ")";
+    QLOG_INFO() << "VenuePictures::addToDownloadQueue(" << picture->uri() << ")";
 
     m_downloadQueue.enqueue(picture);
 
@@ -237,14 +242,14 @@ void VenuePictures::addToDownloadQueue(const VenuePicture &picture)
     }
 }
 
-bool VenuePictures::isHttpRedirect(QNetworkReply *reply)
+bool VenuePictures::isHttpRedirect(QNetworkReply *reply) const
 {
     int statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
     return statusCode == 301 || statusCode == 302 || statusCode == 303
            || statusCode == 305 || statusCode == 307 || statusCode == 308;
 }
 
-bool VenuePictures::saveToDisk(const QString &filename, QIODevice *data)
+bool VenuePictures::saveToDisk(const QString &filename, QIODevice *data) const
 {
     QFile file(m_cacheFolder.filePath(filename));
     if (!file.open(QIODevice::WriteOnly)) {
@@ -260,14 +265,14 @@ bool VenuePictures::saveToDisk(const QString &filename, QIODevice *data)
     return true;
 }
 
-bool VenuePictures::isCached(const VenuePicture &picture)
+bool VenuePictures::isCached(const VenuePicture *picture) const
 {
     return QFile(cachePath(picture)).exists();
 }
 
-QString VenuePictures::cachePath(const VenuePicture &picture)
+QString VenuePictures::cachePath(const VenuePicture *picture) const
 {
-    QString filename = QFileInfo(QUrl(picture.uri()).path()).fileName();
+    QString filename = QFileInfo(QUrl(picture->uri()).path()).fileName();
 
     return m_cacheFolder.absoluteFilePath(filename);
 }

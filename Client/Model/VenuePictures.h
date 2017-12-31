@@ -32,18 +32,19 @@ public:
     bool isAutoUpdateEnabled() const;
 
     void setCacheFolder(const QString &folder);
+    QString cacheFolder() const;
 
 signals:
     void pictureListCleared();
 //    void picturesAdded(const QList<VenuePicture> &pictures);
-    void pictureReady(const VenuePicture &pictures);
+    void pictureReady(VenuePicture *pictures);
 
 public slots:
     void update();
-    void readUpdate(const QList<VenuePicture> &pictureList);
+    void readUpdate(const QList<VenuePicture*> &pictureList);
 
 protected slots:
-    void onVenueChanged(const Venue &venue);
+    void onVenueChanged(const Venue *venue);
     void onDownloadFinished(QNetworkReply *reply);
     bool startNextDownload();
     void onAutoUpdateTimeout();
@@ -54,22 +55,22 @@ protected:
 
     QDir m_cacheFolder;
 
-    QMap<QString,VenuePicture> m_pictures;
+    QMap<QString,VenuePicture*> m_pictures;
     QDateTime m_latestPictureCreated;
-    bool hasPicture(const VenuePicture &picture) const;
+    bool hasPicture(const VenuePicture *picture) const;
     void clearPictureList();
-    void setPictureReady(VenuePicture picture);
+    void setPictureReady(VenuePicture *picture);
 
-    void addToDownloadQueue(const VenuePicture &picture);
-    QQueue<VenuePicture> m_downloadQueue;
+    void addToDownloadQueue(VenuePicture *picture);
+    QQueue<VenuePicture*> m_downloadQueue;
 
     QNetworkAccessManager m_nam;
     bool m_hasActiveDownload;
-    bool isHttpRedirect(QNetworkReply *reply);
-    bool saveToDisk(const QString &filename, QIODevice *data);
+    bool isHttpRedirect(QNetworkReply *reply) const;
+    bool saveToDisk(const QString &filename, QIODevice *data) const;
 
-    bool isCached(const VenuePicture &picture);
-    QString cachePath(const VenuePicture &picture);
+    bool isCached(const VenuePicture *picture) const;
+    QString cachePath(const VenuePicture *picture) const;
 
     bool m_updateIsRunning;
     QTimer *m_autoUpdate;

@@ -30,10 +30,10 @@ public:
 
 public slots:
     void onListCleared();
-    void onPictureReady(const VenuePicture &picture);
+    void onPictureReady(const VenuePicture *picture);
 
 protected:
-    QList<VenuePicture> m_pictures;
+    QList<const VenuePicture*> m_pictures;
 };
 
 #endif // VSC_SLIDESHOWMODEL_H

@@ -6,6 +6,8 @@
 
 class Venue : public BasicEntity
 {
+Q_OBJECT
+
 public:
     QString token() const;
     QString name() const;
@@ -13,7 +15,7 @@ public:
 
     bool isValid() const;
 
-    static Venue fromJsonObject(const QJsonObject &jsonObject);
+    static Venue* fromJsonObject(const QJsonObject &jsonObject);
 
 protected:
     QString m_token;

@@ -21,11 +21,11 @@ bool Venue::isValid() const
     return !token().isEmpty() && !name().isEmpty();
 }
 
-Venue Venue::fromJsonObject(const QJsonObject &jsonObject)
+Venue* Venue::fromJsonObject(const QJsonObject &jsonObject)
 {
     QLOG_TRACE() << "Venue::fromJsonObject()";
 
-    Venue venue;
+    auto venue = new Venue;
 
     if (!jsonObject.contains(QLatin1String("venue"))) {
         QLOG_ERROR() << "missing venue root element";
@@ -42,14 +42,14 @@ Venue Venue::fromJsonObject(const QJsonObject &jsonObject)
         return venue;
     }
 
-    venue.m_token = jsonRoot.value(QLatin1String("token")).toString();
-    venue.m_name = jsonRoot.value(QLatin1String("name")).toString();
+    venue->m_token = jsonRoot.value(QLatin1String("token")).toString();
+    venue->m_name = jsonRoot.value(QLatin1String("name")).toString();
 
     if (jsonRoot.contains(QLatin1String("description"))) {
-        venue.m_description = jsonRoot.value(QLatin1String("description")).toString();
+        venue->m_description = jsonRoot.value(QLatin1String("description")).toString();
     }
 
-    venue.readBasicAttributes(jsonRoot);
+    venue->readBasicAttributes(jsonRoot);
 
     return venue;
 }

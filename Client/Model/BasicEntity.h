@@ -3,9 +3,12 @@
 
 #include <QtCore/QJsonObject>
 #include <QtCore/QDateTime>
+#include <QtCore/QObject>
 
-class BasicEntity
+class BasicEntity : public QObject
 {
+Q_OBJECT
+
 public:
     QDateTime startAt() const;
     QDateTime endAt() const;

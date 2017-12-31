@@ -7,14 +7,16 @@
 class GetVenue : public Endpoint
 {
 public:
-    QNetworkRequest createRequest() override;
+    GetVenue();
 
-    Venue venue() const;
+    QNetworkRequest createRequest() override;
+    Venue* venue() const;
+
 protected:
     bool handleJsonDocument(const QJsonDocument &document) override;
 
 private:
-    Venue m_venue;
+    Venue* m_venue;
 };
 
 #endif // VSC_GETVENUE_H

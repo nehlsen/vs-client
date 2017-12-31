@@ -22,9 +22,9 @@ void SlideShowWidget::reset()
     m_pictureDisplay->setText(tr("No Pictures available"));
 }
 
-void SlideShowWidget::onShowPicture(const VenuePicture &picture)
+void SlideShowWidget::onShowPicture(const VenuePicture *picture)
 {
-    QString currentPicturePath = picture.localPath();
+    QString currentPicturePath = picture->localPath();
     m_currentPicture.load(currentPicturePath);
     m_pictureDisplay->setPixmap(m_currentPicture);
 }
