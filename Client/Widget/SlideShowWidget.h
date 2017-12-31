@@ -16,6 +16,8 @@ public:
     explicit SlideShowWidget(SlideShow *slideShow, QWidget *parent = nullptr);
     explicit SlideShowWidget(Client *client, QWidget *parent = nullptr);
 
+    SlideShow *slideShow() const;
+
 public slots:
     void reset();
     void onShowPicture(const VenuePicture *picture);
@@ -25,6 +27,7 @@ protected:
     QPixmap m_currentPicture;
     QLabel *m_pictureDisplay;
 
+    SlideShow *m_slideShow;
     void setupSlideShow(SlideShow *slideShow);
 };
 

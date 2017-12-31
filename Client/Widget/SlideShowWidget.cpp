@@ -17,6 +17,11 @@ SlideShowWidget::SlideShowWidget(Client *client, QWidget *parent):
     setupSlideShow(new SlideShow(client));
 }
 
+SlideShow *SlideShowWidget::slideShow() const
+{
+    return m_slideShow;
+}
+
 void SlideShowWidget::reset()
 {
     m_pictureDisplay->setText(tr("No Pictures available"));
@@ -46,6 +51,8 @@ void SlideShowWidget::initLayout()
 
 void SlideShowWidget::setupSlideShow(SlideShow *slideShow)
 {
+    m_slideShow = slideShow;
+
     connect(slideShow, &SlideShow::cleared,
             this, &SlideShowWidget::reset);
     connect(slideShow, &SlideShow::showPicture,

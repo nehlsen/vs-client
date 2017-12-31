@@ -2,7 +2,9 @@
 #include <Client/Widget/LoginWidget.h>
 #include <Client/Widget/SelectVenueWidget.h>
 #include <Client/Widget/VenueWidget.h>
+#include <Client/Widget/SlideShowWidget.h>
 #include <Client/Model/VenuePictures.h>
+#include <Client/Model/SlideShow.h>
 #include <QtCore/QSettings>
 #include <Client/Settings.h>
 
@@ -71,4 +73,5 @@ void MainWindow::loadSettings()
     m_client->venuePictures()->setCacheFolder(settings.value("Local/CacheFolder").toString());
     m_loginWidget->editUsername->setText(settings.value("Server/Username").toString());
     m_loginWidget->editPassword->setText(settings.value("Server/Password").toString());
+    m_venueWidget->slideShowWidget->slideShow()->setInterval(settings.value("SlideShow/Interval").toInt());
 }
