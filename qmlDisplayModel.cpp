@@ -39,16 +39,6 @@ Client* createClient()
     return client;
 }
 
-//SlideShow *createSlideShow(Client *client)
-//{
-//    QSettings settings;
-//
-//    auto *slideShow = new SlideShow(client);
-//    slideShow->setInterval(settings.value("SlideShow/Interval").toInt());
-//
-//    return slideShow;
-//}
-
 int main(int argc, char **argv)
 {
     QApplication::setOrganizationName("nehlsen");
@@ -71,14 +61,14 @@ int main(int argc, char **argv)
     logger.addDestination(fileDestination);
 //    logger.addDestination(functorDestination);
 
+    // ------------------------------------------------------------------------------------------------
+
     auto *client = createClient();
-//    auto *slideShow = createSlideShow(client);
     auto *venuePicturesModel = new VenuePicturesModel(client->venuePictures());
 
     QQuickView mainView;
-//    mainView.rootContext()->setContextProperty("vsSlideShow", slideShow);
     mainView.rootContext()->setContextProperty("venuePicturesModel", venuePicturesModel);
-    mainView.setSource(QUrl::fromLocalFile("qml/display.qml"));
+    mainView.setSource(QUrl::fromLocalFile("qml/displayModel.qml"));
 //    mainView.setWidth(800);
 //    mainView.setHeight(600);
 //    mainView.showFullScreen();

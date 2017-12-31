@@ -53,14 +53,28 @@ set(VSC_GUI
         Client/Widget/CapturePublishWidget.cpp
         Client/Widget/SlideShowWidget.cpp
 )
+set(VSC_QML
+        Client/VenueShot.cpp
+)
 
-set(VSC vsc.cpp)
-add_executable(vsc ${QSLOG} ${VSC_CORE} ${VSC_GUI} ${VSC})
-target_link_libraries(vsc Qt5::Widgets Qt5::Gui Qt5::Network Qt5::Multimedia Qt5::MultimediaWidgets)
+set(VSC_SRC ${QSLOG} ${VSC_CORE} ${VSC_GUI} ${VSC_QML})
 
-set(VSC_DISPLAY display.cpp Client/Widget/SlideShowWidget.cpp)
-add_executable(display ${QSLOG} ${VSC_CORE} ${VSC_DISPLAY})
-target_link_libraries(display Qt5::Widgets Qt5::Gui Qt5::Network Qt5::Multimedia Qt5::MultimediaWidgets)
+add_library(vscLib STATIC ${VSC_SRC})
+target_link_libraries(vscLib Qt5::Widgets Qt5::Gui Qt5::Network Qt5::Multimedia Qt5::MultimediaWidgets Qt5::Quick)
+
+################################################################################
+
+add_executable(vsc vsc.cpp)
+target_link_libraries(vsc vscLib)
+
+add_executable(display display.cpp)
+target_link_libraries(display vscLib)
+
+add_executable(qmlDisplayModel qmlDisplayModel.cpp)
+target_link_libraries(qmlDisplayModel vscLib)
+
+add_executable(qmlDisplayBridge qmlDisplayBridge.cpp)
+target_link_libraries(qmlDisplayBridge vscLib)
 
 set(VSC_QML_DISPLAY qmlDisplay.cpp)
 add_executable(qmlDisplay ${QSLOG} ${VSC_CORE} ${VSC_QML_DISPLAY})
