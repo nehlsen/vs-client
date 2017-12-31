@@ -15,11 +15,7 @@ SlideShow::SlideShow(Client *client) :
     m_picturesCurrentIndex(-1)
 {
     initTimer();
-
-    connect(client->venuePictures(), &VenuePictures::pictureListCleared,
-            this, &SlideShow::onPictureListCleared);
-    connect(client->venuePictures(), &VenuePictures::pictureReady,
-            this, &SlideShow::onPictureReady);
+    connectClient(client);
 }
 
 void SlideShow::setInterval(int msec)
@@ -32,13 +28,13 @@ int SlideShow::interval() const
     return m_delayAdvancePicture->interval();
 }
 
-VenuePicture SlideShow::currentPicture() const
+VenuePicture* SlideShow::currentPicture() const
 {
     if (m_picturesCurrentIndex >= 0) {
         return m_pictures.at(m_picturesCurrentIndex);
     }
 
-    return VenuePicture();
+    return new VenuePicture;
 }
 
 int SlideShow::currentPictureIndex() const
@@ -59,7 +55,7 @@ void SlideShow::onPictureListCleared()
     emit cleared();
 }
 
-void SlideShow::onPictureReady(const VenuePicture &picture)
+void SlideShow::onPictureReady(VenuePicture *picture)
 {
     m_pictures << picture;
 }
@@ -83,6 +79,14 @@ void SlideShow::advancePicture()
     QLOG_INFO() << "Slideshow::advancePicture(), index:" << m_picturesCurrentIndex;
 
     emit showPicture(m_pictures.at(m_picturesCurrentIndex));
+}
+
+void SlideShow::connectClient(Client *client)
+{
+    connect(client->venuePictures(), &VenuePictures::pictureListCleared,
+            this, &SlideShow::onPictureListCleared);
+    connect(client->venuePictures(), &VenuePictures::pictureReady,
+            this, &SlideShow::onPictureReady);
 }
 
 void SlideShow::initTimer()

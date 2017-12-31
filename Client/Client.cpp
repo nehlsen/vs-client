@@ -7,6 +7,7 @@
 Client::Client(QObject *parent):
     QObject(parent),
     m_autoRefreshEnabled(true),
+    m_venue(new Venue),
     m_venuePictures(new VenuePictures(this))
 {
     QLOG_TRACE() << "Client::Client";
@@ -39,7 +40,7 @@ Client::Status Client::status() const
     if (token().isValid()) {
         status = Online;
     }
-    if (venue().isValid()) {
+    if (venue()->isValid()) {
         return Ready;
     }
 
@@ -61,7 +62,7 @@ void Client::setVenue(const QString &venueToken)
     get(addAuthHeader(request));
 }
 
-Venue Client::venue() const
+Venue* Client::venue() const
 {
     return m_venue;
 }
@@ -96,7 +97,7 @@ void Client::linkPicture(const QString &publicPictureLocation)
     QLOG_TRACE() << "Client::linkPicture(" << publicPictureLocation << ")";
 
     QStringList parameters;
-    parameters << venue().token()
+    parameters << venue()->token()
                << publicPictureLocation;
 
     m_endpointLinkPicture.setRequestParameters(server(), parameters);
@@ -108,12 +109,12 @@ void Client::linkPicture(const QString &publicPictureLocation)
 void Client::getVenuePictures()
 {
     QLOG_TRACE() << "Client::getVenuePictures()";
-    if (!venue().isValid()) {
+    if (!venue()->isValid()) {
         QLOG_ERROR() << "can not fetch pictures without a valid venue!";
         return;
     }
 
-    m_endpointGetVenuePictures.setRequestParameters(server(), QStringList() << venue().token());
+    m_endpointGetVenuePictures.setRequestParameters(server(), QStringList() << venue()->token());
     QNetworkRequest request = m_endpointGetVenuePictures.createRequest();
     request.setOriginatingObject(&m_endpointGetVenuePictures);
     get(addAuthHeader(request));
@@ -122,13 +123,13 @@ void Client::getVenuePictures()
 void Client::getVenuePictures(const QDateTime &createdAfter)
 {
     QLOG_TRACE() << "Client::getVenuePictures(createdAfter:" << createdAfter << ")";
-    if (!venue().isValid()) {
+    if (!venue()->isValid()) {
         QLOG_ERROR() << "can not fetch pictures without a valid venue!";
         return;
     }
 
     QStringList parameters;
-    parameters << venue().token();
+    parameters << venue()->token();
     parameters << createdAfter.toString("yyyy-MM-ddTHH:mm:ss");
     m_endpointGetVenuePictures.setRequestParameters(server(), parameters);
     QNetworkRequest request = m_endpointGetVenuePictures.createRequest();
@@ -191,10 +192,10 @@ void Client::setToken(const JwtToken &token)
     updateStatus();
 }
 
-void Client::setVenue(const Venue &venue)
+void Client::setVenue(Venue *venue)
 {
     m_venue = venue;
-    if (venue.isValid()) {
+    if (venue->isValid()) {
         emit venueChanged(m_venue);
     }
 

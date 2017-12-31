@@ -25,6 +25,7 @@ public:
         Ready,
         Error
     };
+    Q_ENUMS(Status)
 
     explicit Client(QObject *parent = nullptr);
 
@@ -39,7 +40,7 @@ public:
     JwtToken token() const;
 
     void setVenue(const QString &venueToken);
-    Venue venue() const;
+    Venue *venue() const;
     VenuePictures *venuePictures();
 
 public slots:
@@ -69,7 +70,7 @@ signals:
     void acquireTokenSucceed();
     void acquireTokenFailed();
 
-    void venueChanged(const Venue &venue);
+    void venueChanged(const Venue *venue);
 
     void pictureUploaded(const QString &publicPictureLocation);
     void pictureLinked();
@@ -88,8 +89,8 @@ protected:
     JwtToken m_token;
     void setToken(const JwtToken &token);
 
-    Venue m_venue;
-    void setVenue(const Venue &venue);
+    Venue *m_venue;
+    void setVenue(Venue *venue);
     VenuePictures *m_venuePictures;
 
     void updateStatus();
@@ -109,6 +110,7 @@ protected:
     QNetworkReply *get(QNetworkRequest request);
     QNetworkRequest addAuthHeader(QNetworkRequest request);
     QNetworkReply *prepareReply(QNetworkReply *reply);
-    void dumpRequestInfo(const QString &verb, const QNetworkRequest &request) const; };
+    void dumpRequestInfo(const QString &verb, const QNetworkRequest &request) const;
+};
 
 #endif // VSC_CLIENT_H
