@@ -78,3 +78,6 @@ target_link_libraries(qmlDisplayModel vscLib)
 
 add_executable(qmlDisplayBridge qmlDisplayBridge.cpp)
 target_link_libraries(qmlDisplayBridge vscLib)
+
+add_executable(qmlCapture qmlCapture.cpp)
+target_link_libraries(qmlCapture vscLib)
