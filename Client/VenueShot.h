@@ -45,7 +45,9 @@ public slots:
     void setServer(const QString &uri);
     void setTokenAutoRefreshEnabled(bool enabled);
     void acquireToken(const QString &username, const QString &password);
-//    void setStatus();
+    void postPicture(const QImage &image);
+    void postPicture(const QString &imageUri);
+    //    void setStatus();
     void setVenueToken(const QString &token);
     void setVenue(Venue *venue);
 

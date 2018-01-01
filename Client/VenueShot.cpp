@@ -1,4 +1,6 @@
 #include <QtQml/QtQml>
+#include <QsLog/QsLog.h>
+#include <QtGui/QImage>
 #include "VenueShot.h"
 
 void VenueShot::declareQml()
@@ -80,6 +82,21 @@ void VenueShot::setTokenAutoRefreshEnabled(bool enabled)
 void VenueShot::acquireToken(const QString &username, const QString &password)
 {
     m_client->acquireToken(username, password);
+}
+
+void VenueShot::postPicture(const QImage &image)
+{
+    m_client->postPicture(image);
+}
+
+void VenueShot::postPicture(const QString &imageUri)
+{
+    QImage image;
+    if (image.load(imageUri)) {
+        postPicture(image);
+    } else {
+        QLOG_ERROR() << "VenueShot::postPicture() failed to load image from:" << imageUri;
+    }
 }
 
 void VenueShot::setVenueToken(const QString &token)
