@@ -105,6 +105,17 @@ Rectangle {
                 }
             },
             State {
+                name: "capture-delay"
+                PropertyChanges {
+                    target: pageCapture
+                    visible: true
+                }
+                PropertyChanges {
+                    target: pagePreview
+                    visible: false
+                }
+            },
+            State {
                 name: "preview"
                 PropertyChanges {
                     target: pageCapture
@@ -121,11 +132,12 @@ Rectangle {
             id: pageCapture
             anchors.fill: parent
             visible: false
+            color: root.color
 
             VideoOutput {
                 id: livePreview
                 source: camera
-                focus : visible // to receive focus and capture key events when visible
+                focus: visible // to receive focus and capture key events when visible
                 anchors.fill: parent
     //            anchors.top: parent.top
     //            anchors.bottom: parent.bottom
@@ -155,6 +167,48 @@ Rectangle {
                 MouseArea {
                     anchors.fill: parent;
                     onClicked: {
+//                        camera.imageCapture.capture();
+//                        rectCapturePublish.state = "preview"
+                        rectCapturePublish.state = "capture-delay"
+                        delayCapture.start()
+                    }
+                }
+            }
+
+            Rectangle {
+                id: delayDisplay
+                color: "#ff5500"
+                anchors.bottom: livePreview.bottom
+                anchors.right: livePreview.right
+                anchors.bottomMargin: 15
+                anchors.rightMargin: 15
+                width: 50
+                height: 50
+                radius: 25
+                opacity: 0.75
+                visible: delayCapture.running
+
+                Text {
+                    text: delayCapture.seconds
+                    style: Text.Outline
+                    styleColor: "red"
+                    fontSizeMode: Text.Fit
+                    anchors.centerIn: delayDisplay
+                    font.pixelSize: delayDisplay.height -6
+                }
+            }
+
+            Timer {
+                id: delayCapture
+                property int defaultSeconds: 3
+                property int seconds: defaultSeconds
+                repeat: true
+                interval: 1000
+                onTriggered: {
+                    delayCapture.seconds--;
+                    if (delayCapture.seconds == 0) {
+                        running = false;
+                        delayCapture.seconds = delayCapture.defaultSeconds
                         camera.imageCapture.capture();
                         rectCapturePublish.state = "preview"
                     }
@@ -166,6 +220,7 @@ Rectangle {
             id: pagePreview
             anchors.fill: parent
             visible: false
+            color: root.color
 
             Image {
                 id: photoPreview
