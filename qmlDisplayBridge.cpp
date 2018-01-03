@@ -7,6 +7,10 @@
 #include <Client/VenueShot.h>
 #include "QsLog/QsLog.h"
 
+#ifndef VSC_FULLSCREEN
+#define VSC_FULLSCREEN false
+#endif
+
 using namespace QsLogging;
 
 int main(int argc, char **argv)
@@ -37,8 +41,11 @@ int main(int argc, char **argv)
 
     QQuickView mainView;
     mainView.setSource(QUrl::fromLocalFile("qml/displayBridge.qml"));
-//    mainView.showFullScreen();
-    mainView.show();
+    if (VSC_FULLSCREEN) {
+        mainView.showFullScreen();
+    } else {
+        mainView.show();
+    }
 
     int exitCode = app.exec();
     Logger::destroyInstance();

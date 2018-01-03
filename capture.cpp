@@ -8,6 +8,10 @@
 #include <Client/Widget/CapturePublishWidget.h>
 #include "QsLog/QsLog.h"
 
+#ifndef VSC_FULLSCREEN
+#define VSC_FULLSCREEN false
+#endif
+
 using namespace QsLogging;
 
 Client* createClient()
@@ -67,8 +71,12 @@ int main(int argc, char **argv)
             client,
             &Client::postPicture
     );
-//    capturePublishWidget->showFullScreen();
-    capturePublishWidget->show();
+
+    if (VSC_FULLSCREEN) {
+        capturePublishWidget->showFullScreen();
+    } else {
+        capturePublishWidget->show();
+    }
 
     int exitCode = app.exec();
     Logger::destroyInstance();

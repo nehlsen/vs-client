@@ -8,6 +8,10 @@
 #include <Client/Widget/SlideShowWidget.h>
 #include "QsLog/QsLog.h"
 
+#ifndef VSC_FULLSCREEN
+#define VSC_FULLSCREEN false
+#endif
+
 using namespace QsLogging;
 
 Client* createClient()
@@ -72,8 +76,12 @@ int main(int argc, char **argv)
     auto *client = createClient();
     auto *slideShow = createSlideShow(client);
     auto *slideShowWidget = new SlideShowWidget(slideShow);
-//    slideShowWidget->showFullScreen();
-    slideShowWidget->show();
+
+    if (VSC_FULLSCREEN) {
+        slideShowWidget->showFullScreen();
+    } else {
+        slideShowWidget->show();
+    }
 
     int exitCode = app.exec();
     Logger::destroyInstance();

@@ -10,6 +10,10 @@
 #include <Client/Model/VenuePicturesModel.h>
 #include "QsLog/QsLog.h"
 
+#ifndef VSC_FULLSCREEN
+#define VSC_FULLSCREEN false
+#endif
+
 using namespace QsLogging;
 
 Client* createClient()
@@ -69,10 +73,11 @@ int main(int argc, char **argv)
     QQuickView mainView;
     mainView.rootContext()->setContextProperty("venuePicturesModel", venuePicturesModel);
     mainView.setSource(QUrl::fromLocalFile("qml/displayModel.qml"));
-//    mainView.setWidth(800);
-//    mainView.setHeight(600);
-//    mainView.showFullScreen();
-    mainView.show();
+    if (VSC_FULLSCREEN) {
+        mainView.showFullScreen();
+    } else {
+        mainView.show();
+    }
 
     int exitCode = app.exec();
     Logger::destroyInstance();
