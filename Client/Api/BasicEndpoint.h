@@ -4,7 +4,9 @@
 #include <QtCore/QUrl>
 #include <QtNetwork/QNetworkRequest>
 
+#ifndef DEV_MODE_PREFIX
 #define DEV_MODE_PREFIX "/app_dev.php"
+#endif
 
 class QNetworkReply;
 
