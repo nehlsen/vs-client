@@ -5,6 +5,7 @@
 #include <Client/Client.h>
 #include <Client/Widget/SlideShowWidget.h>
 #include <Client/VenueShot.h>
+#include <QtCore/QTimer>
 #include "QsLog/QsLog.h"
 
 #ifndef VSC_FULLSCREEN
@@ -21,19 +22,16 @@ int main(int argc, char **argv)
 
     QApplication app(argc, argv);
 
-    // 1. init the logging mechanism
     Logger& logger = Logger::instance();
     logger.setLoggingLevel(QsLogging::TraceLevel);
     const QString sLogPath(QDir(app.applicationDirPath()).filePath("vsc.log"));
 
-    // 2. add two destinations
     DestinationPtr fileDestination(DestinationFactory::MakeFileDestination(
             sLogPath, EnableLogRotation, MaxSizeBytes(1024*1024), MaxOldLogCount(2)));
-    DestinationPtr debugDestination(DestinationFactory::MakeDebugOutputDestination());
-//    DestinationPtr functorDestination(DestinationFactory::MakeFunctorDestination(&logFunction));
-//    logger.addDestination(debugDestination);
     logger.addDestination(fileDestination);
-//    logger.addDestination(functorDestination);
+
+//    DestinationPtr debugDestination(DestinationFactory::MakeDebugOutputDestination());
+//    logger.addDestination(debugDestination);
 
     // ------------------------------------------------------------------------------------------------
 
@@ -42,7 +40,7 @@ int main(int argc, char **argv)
     QQuickView mainView;
     mainView.setSource(QUrl::fromLocalFile("qml/displayBridge.qml"));
     if (VSC_FULLSCREEN) {
-        mainView.showFullScreen();
+        QTimer::singleShot(0, &mainView, &QQuickView::showFullScreen);
     } else {
         mainView.show();
     }
