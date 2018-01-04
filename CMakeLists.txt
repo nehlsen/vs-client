@@ -31,7 +31,6 @@ set(QSLOG
 )
 
 set(VSC_CORE
-        BinCore.cpp
         Client/Client.cpp
         Client/JwtToken.cpp
         Client/Settings.cpp
