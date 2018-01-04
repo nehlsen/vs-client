@@ -6,6 +6,7 @@
 #include <Client/Model/VenuePictures.h>
 #include <Client/Model/SlideShow.h>
 #include <Client/Widget/SlideShowWidget.h>
+#include <QtCore/QTimer>
 #include "QsLog/QsLog.h"
 
 #ifndef VSC_FULLSCREEN
@@ -78,7 +79,7 @@ int main(int argc, char **argv)
     auto *slideShowWidget = new SlideShowWidget(slideShow);
 
     if (VSC_FULLSCREEN) {
-        slideShowWidget->showFullScreen();
+        QTimer::singleShot(0, slideShowWidget, &SlideShowWidget::showFullScreen);
     } else {
         slideShowWidget->show();
     }
