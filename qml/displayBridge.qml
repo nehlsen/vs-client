@@ -1,4 +1,5 @@
 import QtQuick 2.7
+import Qt.labs.settings 1.0
 import org.nehlsen.vs 1.0
 import org.nehlsen.vs.client 1.0
 
@@ -8,19 +9,22 @@ Rectangle {
     color: "#646464"
     state: "offline"
 
-    property string myServer: "http://vesh.local"
-    property string myUsername: "nehlsen"
-    property string myPassword: "xc1337"
-    property string myVenue: "1720105c-ed00-4743-815a-39b1fd3801ba"
-    property string myCacheFolder: "/tmp"
-    property int mySlideShowInterval: 1500
+    Settings {
+        id: settings
+        property alias url: vs.server
+        property string username: "my-username"
+        property string password: "my-password"
+        property string venue: "my-venue-token"
+        property alias cacheFolder: vs.cacheFolder
+        property alias slideShowInterval: vs.interval
+    }
 
     VenueShot {
         id: vs
-        server: myServer
+//        server: myServer
         autoFetchPicturesEnabled: true
-        cacheFolder: myCacheFolder
-        interval: mySlideShowInterval
+//        cacheFolder: myCacheFolder
+//        interval: mySlideShowInterval
         onStatusChanged: {
             if (status == ClientStatus.Offline) {
                 root.state = "offline"
@@ -45,13 +49,13 @@ Rectangle {
         State {
             name: "offline"
             StateChangeScript {
-                script: vs.acquireToken(myUsername, myPassword)
+                script: vs.acquireToken(settings.username, settings.password)
             }
         },
         State {
             name: "online"
             StateChangeScript {
-                script: vs.venueToken = myVenue
+                script: vs.venueToken = settings.venue
             }
         },
         State {
