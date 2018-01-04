@@ -1,26 +1,51 @@
-#include <BinCore.h>
-#include <QtCore/QTimer>
-#include <Client/VenueShot.h>
+#include <QtWidgets/QApplication>
+#include <QtCore/QDir>
 #include <QtQuick/QQuickView>
+#include <QtQml/QQmlContext>
+#include <Client/Client.h>
+#include <Client/Widget/SlideShowWidget.h>
+#include <Client/VenueShot.h>
+#include <QtCore/QTimer>
+#include "QsLog/QsLog.h"
 
 #ifndef VSC_FULLSCREEN
 #define VSC_FULLSCREEN false
 #endif
 
+using namespace QsLogging;
+
 int main(int argc, char **argv)
 {
-    BinCore bc(argc, argv);
-    bc.init();
+    QApplication::setOrganizationName("nehlsen");
+    QApplication::setOrganizationDomain("nehlsen.org");
+    QApplication::setApplicationName("VenueShotClient");
+
+    QApplication app(argc, argv);
+
+    Logger& logger = Logger::instance();
+    logger.setLoggingLevel(QsLogging::TraceLevel);
+    const QString sLogPath(QDir(app.applicationDirPath()).filePath("vsc.log"));
+
+    DestinationPtr fileDestination(DestinationFactory::MakeFileDestination(
+            sLogPath, EnableLogRotation, MaxSizeBytes(1024*1024), MaxOldLogCount(2)));
+    logger.addDestination(fileDestination);
+
+//    DestinationPtr debugDestination(DestinationFactory::MakeDebugOutputDestination());
+//    logger.addDestination(debugDestination);
+
+    // ------------------------------------------------------------------------------------------------
 
     VenueShot::declareQml();
 
-    auto mainView = new QQuickView;
-    mainView->setSource(QUrl::fromLocalFile("qml/displayBridge.qml"));
+    QQuickView mainView;
+    mainView.setSource(QUrl::fromLocalFile("qml/displayBridge.qml"));
     if (VSC_FULLSCREEN) {
-        QTimer::singleShot(0, mainView, &QQuickView::showFullScreen);
+        QTimer::singleShot(0, &mainView, &QQuickView::showFullScreen);
     } else {
-        mainView->show();
+        mainView.show();
     }
 
-    return bc.run();
+    int exitCode = app.exec();
+    Logger::destroyInstance();
+    return exitCode;
 }
