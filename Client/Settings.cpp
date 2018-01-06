@@ -6,41 +6,33 @@ void Settings::setDefaults()
 {
     QSettings settings;
 
-    settings.beginGroup("Server");
-    if (!settings.contains("Url")) {
-        settings.setValue("Url", "http://vesh.my-server.com");
+    if (!settings.contains("url")) {
+        settings.setValue("url", "http://vesh.my-server.com");
     }
-    if (!settings.contains("Username")) {
-        settings.setValue("Username", "my-username");
+    if (!settings.contains("username")) {
+        settings.setValue("username", "my-username");
     }
-    if (!settings.contains("Password")) {
-        settings.setValue("Password", "my-password");
+    if (!settings.contains("password")) {
+        settings.setValue("password", "my-password");
     }
-    if (!settings.contains("Venue")) {
-        settings.setValue("Venue", "3");
+    if (!settings.contains("venue")) {
+        settings.setValue("venue", "3");
     }
-    settings.endGroup();
+    
+    if (!settings.contains("cacheFolder")) {
+        settings.setValue("cacheFolder", QDir::homePath() + "/VenueShot/Cache");
+    }
+    
+    if (!settings.contains("autoFetchEnabled")) {
+        settings.setValue("autoFetchEnabled", true);
+    }
+    if (!settings.contains("autoUpdateInterval")) {
+        settings.setValue("autoUpdateInterval", 10);
+    }
 
-    settings.beginGroup("Local");
-    if (!settings.contains("CacheFolder")) {
-        settings.setValue("CacheFolder", QDir::homePath() + "/VenueShot/Cache");
+    if (!settings.contains("slideShowInterval")) {
+        settings.setValue("slideShowInterval", 1000);
     }
-    settings.endGroup();
-
-    settings.beginGroup("Config");
-    if (!settings.contains("AutoFetchEnabled")) {
-        settings.setValue("AutoFetchEnabled", true);
-    }
-    if (!settings.contains("AutoUpdateInterval")) {
-        settings.setValue("AutoUpdateInterval", 10);
-    }
-    settings.endGroup();
-
-    settings.beginGroup("SlideShow");
-    if (!settings.contains("Interval")) {
-        settings.setValue("Interval", 1000);
-    }
-    settings.endGroup();
 
     settings.sync();
 }

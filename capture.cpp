@@ -21,12 +21,12 @@ Client* createClient()
     QSettings settings;
 
     auto *client = new Client();
-    client->setServer(settings.value("Server/Url").toString());
-//    client->venuePictures()->setAutoFetchPicturesEnabled(settings.value("Config/AutoFetchEnabled").toBool());
-//    client->venuePictures()->setAutoUpdateInterval(settings.value("Config/AutoUpdateInterval").toInt());
-//    client->venuePictures()->setCacheFolder(settings.value("Local/CacheFolder").toString());
+    client->setServer(settings.value("url").toString());
+//    client->venuePictures()->setAutoFetchPicturesEnabled(settings.value("autoFetchEnabled").toBool());
+//    client->venuePictures()->setAutoUpdateInterval(settings.value("autoUpdateInterval").toInt());
+//    client->venuePictures()->setCacheFolder(settings.value("cacheFolder").toString());
 
-    QString venue = settings.value("Server/Venue").toString();
+    QString venue = settings.value("venue").toString();
     QObject::connect(
             client,
             &Client::acquireTokenSucceed,
@@ -34,8 +34,8 @@ Client* createClient()
     );
 
     client->acquireToken(
-            settings.value("Server/Username").toString(),
-            settings.value("Server/Password").toString()
+            settings.value("username").toString(),
+            settings.value("password").toString()
     );
 
     return client;

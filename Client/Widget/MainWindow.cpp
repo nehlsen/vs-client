@@ -67,11 +67,12 @@ void MainWindow::loadSettings()
     Settings::setDefaults();
 
     QSettings settings;
-    m_client->setServer(settings.value("Server/Url").toString());
-    m_client->venuePictures()->setAutoFetchPicturesEnabled(settings.value("Config/AutoFetchEnabled").toBool());
-    m_client->venuePictures()->setAutoUpdateInterval(settings.value("Config/AutoUpdateInterval").toInt());
-    m_client->venuePictures()->setCacheFolder(settings.value("Local/CacheFolder").toString());
-    m_loginWidget->editUsername->setText(settings.value("Server/Username").toString());
-    m_loginWidget->editPassword->setText(settings.value("Server/Password").toString());
-    m_venueWidget->slideShowWidget->slideShow()->setInterval(settings.value("SlideShow/Interval").toInt());
+    m_client->setServer(settings.value("url").toString());
+    m_client->venuePictures()->setAutoFetchPicturesEnabled(settings.value("autoFetchEnabled").toBool());
+    m_client->venuePictures()->setAutoUpdateInterval(settings.value("autoUpdateInterval").toInt());
+    m_client->venuePictures()->setCacheFolder(settings.value("cacheFolder").toString());
+    m_loginWidget->editUsername->setText(settings.value("username").toString());
+    m_loginWidget->editPassword->setText(settings.value("password").toString());
+    m_selectVenueWidget->editVenueToken->setText(settings.value("venue").toString());
+    m_venueWidget->slideShowWidget->slideShow()->setInterval(settings.value("slideShowInterval").toInt());
 }

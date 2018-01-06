@@ -10,23 +10,21 @@ using namespace QsLogging;
 Client* createClient()
 {
     QSettings settings;
-    settings.beginGroup("Server");
-    if (!settings.contains("Url")) {
-        settings.setValue("Url", "http://vesh.local");
+    if (!settings.contains("url")) {
+        settings.setValue("url", "http://vesh.local");
     }
-    if (!settings.contains("Username")) {
-        settings.setValue("Username", "nehlsen");
+    if (!settings.contains("username")) {
+        settings.setValue("username", "nehlsen");
     }
-    if (!settings.contains("Password")) {
-        settings.setValue("Password", "xc1337");
+    if (!settings.contains("password")) {
+        settings.setValue("password", "xc1337");
     }
-    settings.endGroup();
     settings.sync();
 
     auto *client = new Client();
-    client->setServer(settings.value("Server/Url").toString());
-//    client->setUsername(settings.value("Server/Username").toString());
-//    client->setPassword(settings.value("Server/Password").toString());
+    client->setServer(settings.value("url").toString());
+//    client->setUsername(settings.value("username").toString());
+//    client->setPassword(settings.value("password").toString());
 
     return client;
 }
