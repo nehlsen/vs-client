@@ -41,7 +41,7 @@ Client::Status Client::status() const
         status = Online;
     }
     if (venue()->isValid()) {
-        return Ready;
+        status = Ready;
     }
 
     return status;
@@ -171,6 +171,11 @@ void Client::requestFinished()
 void Client::requestError(QNetworkReply::NetworkError code)
 {
     QLOG_TRACE() << "Client::requestError()" << code;
+
+    if (code == QNetworkReply::AuthenticationRequiredError && !token().isValid()) {
+        QLOG_INFO() << "Client::requestError(): Token expired";
+        updateStatus();
+    }
 }
 
 void Client::requestSslErrors(const QList<QSslError> &errors)
@@ -246,11 +251,15 @@ QNetworkReply *Client::get(QNetworkRequest request)
 QNetworkRequest Client::addAuthHeader(QNetworkRequest request)
 {
     if (token().isLifetimeExpired()) {
-        QLOG_ERROR() << "a valid token has to be acquired prior to using it";
+        QLOG_ERROR() << "Client::addAuthHeader(): Token is expired";
+        return request;
+    }
+    if (!token().isValid()) {
+        QLOG_ERROR() << "Client::addAuthHeader(): Token is NOT valid";
         return request;
     }
 
-    request.setRawHeader("Authorization", QString("Bearer %1").arg(m_token.token()).toUtf8());
+    request.setRawHeader("Authorization", QString("Bearer %1").arg(token().token()).toUtf8());
 
     return request;
 }

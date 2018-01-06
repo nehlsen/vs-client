@@ -9,7 +9,6 @@ class JwtToken
 {
 public:
     JwtToken();
-    explicit JwtToken(int lifetime);
 
     QString token() const;
 
@@ -19,14 +18,14 @@ public:
     bool isValid() const;
     bool isLifetimeExpired() const;
 
-    static JwtToken fromJsonObject(const QJsonObject &jsonObject, int lifetime = 60*60);
+    static JwtToken fromJsonObject(const QJsonObject &jsonObject);
 
 protected:
     QDateTime m_created;
-
     QString m_token;
-
     int m_lifetime;
+
+    static int extractLifetime(const QString &token);
 };
 
 #endif // VSC_JWTTOKEN_H
