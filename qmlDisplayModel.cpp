@@ -51,19 +51,18 @@ int main(int argc, char **argv)
 
     QApplication app(argc, argv);
 
-    // 1. init the logging mechanism
     Logger& logger = Logger::instance();
     logger.setLoggingLevel(QsLogging::TraceLevel);
     const QString sLogPath(QDir(app.applicationDirPath()).filePath("vsc.log"));
 
-    // 2. add two destinations
     DestinationPtr fileDestination(DestinationFactory::MakeFileDestination(
             sLogPath, EnableLogRotation, MaxSizeBytes(1024*1024), MaxOldLogCount(2)));
-    DestinationPtr debugDestination(DestinationFactory::MakeDebugOutputDestination());
-//    DestinationPtr functorDestination(DestinationFactory::MakeFunctorDestination(&logFunction));
-//    logger.addDestination(debugDestination);
     logger.addDestination(fileDestination);
-//    logger.addDestination(functorDestination);
+
+#ifdef VSC_CLI_LOG
+    DestinationPtr debugDestination(DestinationFactory::MakeDebugOutputDestination());
+    logger.addDestination(debugDestination);
+#endif
 
     // ------------------------------------------------------------------------------------------------
 

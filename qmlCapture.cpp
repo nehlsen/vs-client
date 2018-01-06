@@ -30,8 +30,10 @@ int main(int argc, char **argv)
             sLogPath, EnableLogRotation, MaxSizeBytes(1024*1024), MaxOldLogCount(2)));
     logger.addDestination(fileDestination);
 
-//    DestinationPtr debugDestination(DestinationFactory::MakeDebugOutputDestination());
-//    logger.addDestination(debugDestination);
+#ifdef VSC_CLI_LOG
+    DestinationPtr debugDestination(DestinationFactory::MakeDebugOutputDestination());
+    logger.addDestination(debugDestination);
+#endif
 
     // ------------------------------------------------------------------------------------------------
 
