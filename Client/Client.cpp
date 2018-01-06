@@ -35,16 +35,14 @@ bool Client::isTokenAutoRefreshEnabled() const
 
 Client::Status Client::status() const
 {
-    Status status = Offline;
-
-    if (token().isValid()) {
-        status = Online;
+    if (!token().isValid()) {
+        return Offline;
     }
-    if (venue()->isValid()) {
-        status = Ready;
+    if (!venue()->isValid()) {
+        return Online;
     }
 
-    return status;
+    return Ready;
 }
 
 JwtToken Client::token() const

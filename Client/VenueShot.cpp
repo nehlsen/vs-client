@@ -53,6 +53,11 @@ bool VenueShot::isAutoUpdateEnabled() const
     return m_client->venuePictures()->isAutoUpdateEnabled();
 }
 
+int VenueShot::autoUpdateInterval() const
+{
+    return m_client->venuePictures()->autoUpdateInterval();
+}
+
 QString VenueShot::cacheFolder() const
 {
     return m_client->venuePictures()->cacheFolder();
@@ -117,6 +122,11 @@ void VenueShot::setAutoFetchPicturesEnabled(bool enabled)
 void VenueShot::setAutoUpdateEnabled(bool enabled)
 {
 //    m_client->venuePictures()->setAutoUpdateInterval()
+}
+
+void VenueShot::setAutoUpdateInterval(int seconds)
+{
+    m_client->venuePictures()->setAutoUpdateInterval(seconds);
 }
 
 void VenueShot::setCacheFolder(const QString &folder)

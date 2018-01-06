@@ -44,7 +44,11 @@ void VenuePictures::setAutoUpdateInterval(int seconds)
 
 int VenuePictures::autoUpdateInterval() const
 {
-    return m_autoUpdate->interval();
+    if (!m_autoUpdate->isActive()) {
+        return 0;
+    }
+
+    return m_autoUpdate->interval() / 1000;
 }
 
 bool VenuePictures::isAutoUpdateEnabled() const

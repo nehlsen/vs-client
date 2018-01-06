@@ -15,6 +15,8 @@ Rectangle {
         property string username: "my-username"
         property string password: "my-password"
         property string venue: "my-venue-token"
+//        property int autoUpdateInterval: vs.autoUpdateInterval
+        property int autoUpdateInterval: 10
         property alias cacheFolder: vs.cacheFolder
         property alias slideShowInterval: vs.interval
     }
@@ -64,6 +66,7 @@ Rectangle {
                 script: {
                     display.visible = true
                     loadingLabel.visible = false
+                    vs.autoUpdateInterval = settings.autoUpdateInterval
                 }
             }
         },

@@ -19,6 +19,7 @@ Q_PROPERTY(Venue* venue READ venue WRITE setVenue NOTIFY venueChanged)
 // properties mirrored from VenuePictures
 Q_PROPERTY(bool autoFetchPicturesEnabled READ isAutoFetchPicturesEnabled WRITE setAutoFetchPicturesEnabled NOTIFY autoFetchPicturesEnabledChanged)
 Q_PROPERTY(bool autoUpdateEnabled READ isAutoUpdateEnabled WRITE setAutoUpdateEnabled NOTIFY autoUpdateEnabledChanged)
+Q_PROPERTY(int autoUpdateInterval READ autoUpdateInterval WRITE setAutoUpdateInterval NOTIFY autoUpdateIntervalChanged)
 Q_PROPERTY(QString cacheFolder READ cacheFolder WRITE setCacheFolder NOTIFY cacheFolderChanged)
 // properties mirrored from SlideShow
 Q_PROPERTY(int interval READ interval WRITE setInterval NOTIFY intervalChanged)
@@ -36,6 +37,7 @@ public:
 
     bool isAutoFetchPicturesEnabled() const;
     bool isAutoUpdateEnabled() const;
+    int autoUpdateInterval() const;
     QString cacheFolder() const;
 
     int interval() const;
@@ -53,6 +55,7 @@ public slots:
 
     void setAutoFetchPicturesEnabled(bool enabled);
     void setAutoUpdateEnabled(bool enabled);
+    void setAutoUpdateInterval(int seconds);
     void setCacheFolder(const QString &folder);
 
     void setInterval(int interval);
@@ -67,6 +70,7 @@ signals:
 
     void autoFetchPicturesEnabledChanged();
     void autoUpdateEnabledChanged();
+    void autoUpdateIntervalChanged();
     void cacheFolderChanged();
 
     void intervalChanged();
