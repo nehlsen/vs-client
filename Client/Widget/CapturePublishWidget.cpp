@@ -55,7 +55,6 @@ void CapturePublishWidget::initPageCapture()
     connect(m_cameraImageCapture, &QCameraImageCapture::imageCaptured,
             this, &CapturePublishWidget::onImageCaptured);
     m_camera->setCaptureMode(QCamera::CaptureStillImage);
-    m_camera->start();
 
     m_btnCapture = new QPushButton(this);
     m_btnCapture->setText(tr("Capture!"));
@@ -106,4 +105,16 @@ void CapturePublishWidget::onBtnPublishClicked()
 void CapturePublishWidget::onBtnDiscardClicked()
 {
     setCurrentIndex(0);
+}
+
+void CapturePublishWidget::showEvent(QShowEvent *event)
+{
+    QWidget::showEvent(event);
+    m_camera->start();
+}
+
+void CapturePublishWidget::hideEvent(QHideEvent *event)
+{
+    QWidget::hideEvent(event);
+    m_camera->stop();
 }

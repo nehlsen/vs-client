@@ -39,6 +39,10 @@ protected:
     QLabel *m_previewDisplay;
     QPushButton *m_btnPublish;
     QPushButton *m_btnDiscard;
+
+    void showEvent(QShowEvent *event) override;
+
+    void hideEvent(QHideEvent *event) override;
 };
 
 #endif // VSC_CAPTUREPUBLISHWIDGET_H
