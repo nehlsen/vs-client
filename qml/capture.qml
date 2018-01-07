@@ -1,5 +1,5 @@
 import QtQuick 2.7
-import QtMultimedia 5.8
+import QtMultimedia 5.7
 import Qt.labs.settings 1.0
 import org.nehlsen.vs 1.0
 import org.nehlsen.vs.client 1.0
