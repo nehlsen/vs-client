@@ -7,6 +7,7 @@ void VenueShot::declareQml()
 {
     qmlRegisterType<VenueShot>("org.nehlsen.vs", 1, 0, "VenueShot");
     qmlRegisterType<Client>("org.nehlsen.vs.client", 1, 0, "ClientStatus");
+    qmlRegisterType<VenuePicture>("org.nehlsen.vs.picture", 1, 0, "VenuePicture");
 }
 
 VenueShot::VenueShot(QObject *parent) :
