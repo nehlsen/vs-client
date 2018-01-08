@@ -8,6 +8,8 @@
 class BasicEntity : public QObject
 {
 Q_OBJECT
+Q_PROPERTY(QDateTime createdAt READ createdAt)
+Q_PROPERTY(QString createdBy READ createdBy)
 
 public:
     QDateTime startAt() const;
