@@ -2,6 +2,7 @@ import QtQuick 2.7
 import Qt.labs.settings 1.0
 import org.nehlsen.vs 1.0
 import org.nehlsen.vs.client 1.0
+import "./" as VsModules
 
 Rectangle {
     id: root
@@ -39,7 +40,7 @@ Rectangle {
             }
         }
         onCurrentPictureChanged: {
-            display.source = currentPicture.localPath
+            display.setPicture(currentPicture)
         }
     }
 
@@ -75,17 +76,10 @@ Rectangle {
         }
     ]
 
-    Text {
+    VsModules.Loading {
         id: loadingLabel
-        anchors.fill: parent
-        text: "Loading..."
     }
-    Image {
+    VsModules.Picture {
         id: display
-        anchors.fill: parent
-        visible: false
-        smooth: true
-        fillMode: Image.PreserveAspectFit
-        asynchronous: true
     }
 }
