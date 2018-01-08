@@ -57,7 +57,13 @@ void SlideShow::onPictureListCleared()
 
 void SlideShow::onPictureReady(VenuePicture *picture)
 {
+    bool immediateChange = m_pictures.isEmpty();
+
     m_pictures << picture;
+
+    if (immediateChange) {
+        QTimer::singleShot(0, this, &SlideShow::advancePicture);
+    }
 }
 
 void SlideShow::advancePicture()
