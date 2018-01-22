@@ -7,7 +7,7 @@ import "./" as VsModules
 Rectangle {
     id: root
     anchors.fill: parent
-    color: "#646464"
+    color: "black"
     state: "offline"
 
     Settings {
@@ -79,7 +79,7 @@ Rectangle {
     VsModules.Loading {
         id: loadingLabel
     }
-    VsModules.Picture {
+    VsModules.PictureSwitcher {
         id: display
     }
 }

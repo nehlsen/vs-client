@@ -1,7 +1,14 @@
 import QtQuick 2.7
 
-Text {
-    id: loadingLabel
+Rectangle {
     anchors.fill: parent
-    text: "Loading..."
+    color: parent.color
+
+    Text {
+        id: loadingLabel
+        color: "white"
+        anchors.centerIn: parent
+        text: "Loading..."
+        font.pointSize: 24
+    }
 }
