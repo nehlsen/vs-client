@@ -6,7 +6,6 @@
 #include <Client/Model/VenuePictures.h>
 #include <Client/Model/SlideShow.h>
 #include <QtCore/QSettings>
-#include <Client/Settings.h>
 
 MainWindow::MainWindow(QWidget *parent) :
     QStackedWidget(parent)
@@ -67,7 +66,8 @@ void MainWindow::loadSettings()
     Settings::setDefaults();
 
     QSettings settings;
-    m_client->setServer(settings.value("url").toString());
+    m_client->setServerService(settings.value("serverService").toString());
+    m_client->setServerStorage(settings.value("serverStorage").toString());
     m_client->venuePictures()->setAutoFetchPicturesEnabled(settings.value("autoFetchEnabled").toBool());
     m_client->venuePictures()->setAutoUpdateInterval(settings.value("autoUpdateInterval").toInt());
     m_client->venuePictures()->setCacheFolder(settings.value("cacheFolder").toString());

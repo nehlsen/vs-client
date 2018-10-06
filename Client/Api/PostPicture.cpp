@@ -4,8 +4,8 @@
 #include <QsLog/QsLog.h>
 #include <QtNetwork/QNetworkReply>
 
-#define POST_PICTURE_URL DEV_MODE_PREFIX "/api/v1/pictures.json"
-#define POST_FORM_FIELD_NAME "vesh_picture[file][file]"
+#define POST_PICTURE_URL DEV_MODE_PREFIX "/v1/pictures.json"
+#define POST_FORM_FIELD_NAME "picture[file][file]"
 
 PostPicture::PostPicture() :
     m_payload(nullptr)

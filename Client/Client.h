@@ -29,8 +29,11 @@ public:
 
     explicit Client(QObject *parent = nullptr);
 
-    void setServer(const QString &server);
-    QString server() const;
+    void setServerService(const QString &server);
+    QString serverService() const;
+
+    void setServerStorage(const QString &server);
+    QString serverStorage() const;
 
     void setTokenAutoRefreshEnabled(bool enabled = true);
     bool isTokenAutoRefreshEnabled() const;
@@ -83,7 +86,8 @@ protected slots:
     void requestSslErrors(const QList<QSslError> &errors);
 
 protected:
-    QString m_server;
+    QString m_serverService;
+    QString m_serverStorage;
 
     bool m_autoRefreshEnabled;
     JwtToken m_token;

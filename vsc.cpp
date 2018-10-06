@@ -9,20 +9,13 @@ using namespace QsLogging;
 
 Client* createClient()
 {
+    Settings::setDefaults();
+
     QSettings settings;
-    if (!settings.contains("url")) {
-        settings.setValue("url", "http://vesh.local");
-    }
-    if (!settings.contains("username")) {
-        settings.setValue("username", "nehlsen");
-    }
-    if (!settings.contains("password")) {
-        settings.setValue("password", "xc1337");
-    }
-    settings.sync();
 
     auto *client = new Client();
-    client->setServer(settings.value("url").toString());
+    client->setServerService(settings.value("serverService").toString());
+    client->setServerStorage(settings.value("serverStorage").toString());
 //    client->setUsername(settings.value("username").toString());
 //    client->setPassword(settings.value("password").toString());
 

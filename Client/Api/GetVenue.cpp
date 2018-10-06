@@ -1,7 +1,7 @@
 #include <QsLog/QsLog.h>
 #include "GetVenue.h"
 
-#define GET_VENUE_URL DEV_MODE_PREFIX "/api/v1/venues/%1.json"
+#define GET_VENUE_URL DEV_MODE_PREFIX "/v1/venues/%1.json"
 
 GetVenue::GetVenue():
     m_venue(new Venue)

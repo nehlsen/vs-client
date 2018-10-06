@@ -2,7 +2,7 @@
 #include <QtCore/QJsonArray>
 #include "GetVenuePictures.h"
 
-#define GET_VENUE_PICTURES_URL DEV_MODE_PREFIX "/api/v1/venues/%1/pictures.json"
+#define GET_VENUE_PICTURES_URL DEV_MODE_PREFIX "/v1/venues/%1/pictures.json"
 
 QNetworkRequest GetVenuePictures::createRequest()
 {

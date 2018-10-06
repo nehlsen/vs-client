@@ -14,8 +14,8 @@ QNetworkRequest AcquireToken::createRequest()
 QJsonDocument AcquireToken::payload()
 {
     QJsonObject payload;
-    payload["_username"] = requestParameters().at(0);
-    payload["_password"] = requestParameters().at(1);
+    payload["username"] = requestParameters().at(0);
+    payload["password"] = requestParameters().at(1);
 
     return QJsonDocument(payload);
 }

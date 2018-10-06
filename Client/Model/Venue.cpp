@@ -27,11 +27,12 @@ Venue* Venue::fromJsonObject(const QJsonObject &jsonObject)
 
     auto venue = new Venue;
 
-    if (!jsonObject.contains(QLatin1String("venue"))) {
-        QLOG_ERROR() << "missing venue root element";
-        return venue;
-    }
-    const QJsonObject &jsonRoot = jsonObject.value(QLatin1String("venue")).toObject();
+//    if (!jsonObject.contains(QLatin1String("venue"))) {
+//        QLOG_ERROR() << "missing venue root element";
+//        return venue;
+//    }
+//    const QJsonObject &jsonRoot = jsonObject.value(QLatin1String("venue")).toObject();
+    const QJsonObject &jsonRoot = jsonObject;
 
     if (!jsonRoot.contains(QLatin1String("token"))) {
         QLOG_ERROR() << "missing token";

@@ -19,9 +19,14 @@ VenueShot::VenueShot(QObject *parent) :
     connect(m_slideShow, &SlideShow::showPicture, this, &VenueShot::currentPictureChanged);
 }
 
-QString VenueShot::server() const
+QString VenueShot::serverService() const
 {
-    return m_client->server();
+    return m_client->serverService();
+}
+
+QString VenueShot::serverStorage() const
+{
+    return m_client->serverStorage();
 }
 
 bool VenueShot::isTokenAutoRefreshEnabled() const
@@ -75,9 +80,14 @@ VenuePicture *VenueShot::currentPicture() const
     return m_slideShow->currentPicture();
 }
 
-void VenueShot::setServer(const QString &uri)
+void VenueShot::setServerService(const QString &uri)
 {
-    m_client->setServer(uri);
+    m_client->setServerService(uri);
+}
+
+void VenueShot::setServerStorage(const QString &uri)
+{
+    m_client->setServerStorage(uri);
 }
 
 void VenueShot::setTokenAutoRefreshEnabled(bool enabled)

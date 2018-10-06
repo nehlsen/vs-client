@@ -13,14 +13,24 @@ Client::Client(QObject *parent):
     QLOG_TRACE() << "Client::Client";
 }
 
-void Client::setServer(const QString &server)
+void Client::setServerService(const QString &server)
 {
-    m_server = server;
+    m_serverService = server;
 }
 
-QString Client::server() const
+QString Client::serverService() const
 {
-    return m_server;
+    return m_serverService;
+}
+
+void Client::setServerStorage(const QString &server)
+{
+    m_serverStorage= server;
+}
+
+QString Client::serverStorage() const
+{
+    return m_serverStorage;
 }
 
 void Client::setTokenAutoRefreshEnabled(bool enabled)
@@ -54,7 +64,7 @@ void Client::setVenue(const QString &venueToken)
 {
     QLOG_TRACE() << "Client::setVenue(" << venueToken << ")";
 
-    m_endpointGetVenue.setRequestParameters(server(), QStringList() << venueToken);
+    m_endpointGetVenue.setRequestParameters(serverService(), QStringList() << venueToken);
     QNetworkRequest request = m_endpointGetVenue.createRequest();
     request.setOriginatingObject(&m_endpointGetVenue);
     get(addAuthHeader(request));
@@ -74,7 +84,7 @@ void Client::acquireToken(const QString &username, const QString &password)
 {
     QLOG_TRACE() << "Client::acquireToken";
 
-    m_endpointAcquireToken.setRequestParameters(server(), QStringList() << username << password);
+    m_endpointAcquireToken.setRequestParameters(serverService(), QStringList() << username << password);
     QNetworkRequest request = m_endpointAcquireToken.createRequest();
     request.setOriginatingObject(&m_endpointAcquireToken);
     post(request, m_endpointAcquireToken.payload());
@@ -84,7 +94,7 @@ void Client::postPicture(const QImage &image)
 {
     QLOG_TRACE() << "Client::postPicture";
 
-    m_endpointPostPicture.setRequestParameters(server(), QStringList());
+    m_endpointPostPicture.setRequestParameters(serverStorage(), QStringList());
     QNetworkRequest request = m_endpointPostPicture.createRequest();
     request.setOriginatingObject(&m_endpointPostPicture);
     post(addAuthHeader(request), m_endpointPostPicture.payload(image));
@@ -98,7 +108,7 @@ void Client::linkPicture(const QString &publicPictureLocation)
     parameters << venue()->token()
                << publicPictureLocation;
 
-    m_endpointLinkPicture.setRequestParameters(server(), parameters);
+    m_endpointLinkPicture.setRequestParameters(serverService(), parameters);
     QNetworkRequest request = m_endpointLinkPicture.createRequest();
     request.setOriginatingObject(&m_endpointLinkPicture);
     post(addAuthHeader(request), m_endpointLinkPicture.payload());
@@ -112,7 +122,7 @@ void Client::getVenuePictures()
         return;
     }
 
-    m_endpointGetVenuePictures.setRequestParameters(server(), QStringList() << venue()->token());
+    m_endpointGetVenuePictures.setRequestParameters(serverService(), QStringList() << venue()->token());
     QNetworkRequest request = m_endpointGetVenuePictures.createRequest();
     request.setOriginatingObject(&m_endpointGetVenuePictures);
     get(addAuthHeader(request));
@@ -129,7 +139,7 @@ void Client::getVenuePictures(const QDateTime &createdAfter)
     QStringList parameters;
     parameters << venue()->token();
     parameters << createdAfter.toString("yyyy-MM-ddTHH:mm:ss");
-    m_endpointGetVenuePictures.setRequestParameters(server(), parameters);
+    m_endpointGetVenuePictures.setRequestParameters(serverService(), parameters);
     QNetworkRequest request = m_endpointGetVenuePictures.createRequest();
     request.setOriginatingObject(&m_endpointGetVenuePictures);
     get(addAuthHeader(request));

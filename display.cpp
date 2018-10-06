@@ -2,7 +2,6 @@
 #include <QtCore/QDir>
 #include <QtCore/QSettings>
 #include <Client/Client.h>
-#include <Client/Settings.h>
 #include <Client/Model/VenuePictures.h>
 #include <Client/Model/SlideShow.h>
 #include <Client/Widget/SlideShowWidget.h>
@@ -22,7 +21,8 @@ Client* createClient()
     QSettings settings;
 
     auto *client = new Client();
-    client->setServer(settings.value("url").toString());
+    client->setServerService(settings.value("serverService").toString());
+    client->setServerStorage(settings.value("serverStorage").toString());
     client->venuePictures()->setAutoFetchPicturesEnabled(settings.value("autoFetchEnabled").toBool());
     client->venuePictures()->setAutoUpdateInterval(settings.value("autoUpdateInterval").toInt());
     client->venuePictures()->setCacheFolder(settings.value("cacheFolder").toString());

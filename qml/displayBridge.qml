@@ -12,7 +12,8 @@ Rectangle {
 
     Settings {
         id: settings
-        property alias url: vs.server
+        property alias serverService: vs.serverService
+        property alias serverStorage: vs.serverStorage
         property string username: "my-username"
         property string password: "my-password"
         property string venue: "my-venue-token"

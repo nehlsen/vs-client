@@ -6,8 +6,11 @@ void Settings::setDefaults()
 {
     QSettings settings;
 
-    if (!settings.contains("url")) {
-        settings.setValue("url", "http://vesh.my-server.com");
+    if (!settings.contains("serverService")) {
+        settings.setValue("serverService", "http://api.my-server.com");
+    }
+    if (!settings.contains("serverStorage")) {
+        settings.setValue("serverStorage", "http://storage.my-server.com");
     }
     if (!settings.contains("username")) {
         settings.setValue("username", "my-username");

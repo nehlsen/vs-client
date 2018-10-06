@@ -11,7 +11,8 @@ class VenueShot : public QObject
 {
 Q_OBJECT
 // properties mirrored from client
-Q_PROPERTY(QString server READ server WRITE setServer NOTIFY serverChanged)
+Q_PROPERTY(QString serverService READ serverService WRITE setServerService NOTIFY serverServiceChanged)
+Q_PROPERTY(QString serverStorage READ serverStorage WRITE setServerStorage NOTIFY serverStorageChanged)
 Q_PROPERTY(bool tokenAutoRefreshEnabled READ isTokenAutoRefreshEnabled WRITE setTokenAutoRefreshEnabled NOTIFY tokenAutoRefreshEnabledChanged)
 Q_PROPERTY(Client::Status status READ status /*WRITE setStatus*/ NOTIFY statusChanged)
 Q_PROPERTY(QString venueToken READ venueToken WRITE setVenueToken NOTIFY venueTokenChanged)
@@ -29,7 +30,8 @@ public:
     static void declareQml();
     explicit VenueShot(QObject *parent = nullptr);
 
-    QString server() const;
+    QString serverService() const;
+    QString serverStorage() const;
     bool isTokenAutoRefreshEnabled() const;
     Client::Status status() const;
     QString venueToken() const;
@@ -44,7 +46,8 @@ public:
     VenuePicture* currentPicture() const;
 
 public slots:
-    void setServer(const QString &uri);
+    void setServerService(const QString &uri);
+    void setServerStorage(const QString &uri);
     void setTokenAutoRefreshEnabled(bool enabled);
     void acquireToken(const QString &username, const QString &password);
     void postPicture(const QImage &image);
@@ -62,7 +65,8 @@ public slots:
 //    void setCurrentPicture();
 
 signals:
-    void serverChanged();
+    void serverServiceChanged();
+    void serverStorageChanged();
     void tokenAutoRefreshEnabledChanged();
     void statusChanged(Client::Status newStatus);
     void venueTokenChanged();
