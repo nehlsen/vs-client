@@ -7,6 +7,7 @@
 #include <Client/Widget/SlideShowWidget.h>
 #include <QtCore/QTimer>
 #include "QsLog/QsLog.h"
+#include <Client/Settings.h>
 
 #ifndef VSC_FULLSCREEN
 #define VSC_FULLSCREEN false

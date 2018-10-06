@@ -7,6 +7,7 @@
 #include <Client/Model/VenuePictures.h>
 #include <Client/Widget/SlideShowWidget.h>
 #include <Client/Model/VenuePicturesModel.h>
+#include <Client/Settings.h>
 #include "QsLog/QsLog.h"
 
 #ifndef VSC_FULLSCREEN

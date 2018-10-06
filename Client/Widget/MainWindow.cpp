@@ -6,6 +6,7 @@
 #include <Client/Model/VenuePictures.h>
 #include <Client/Model/SlideShow.h>
 #include <QtCore/QSettings>
+#include <Client/Settings.h>
 
 MainWindow::MainWindow(QWidget *parent) :
     QStackedWidget(parent)

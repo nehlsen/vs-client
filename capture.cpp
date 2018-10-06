@@ -6,6 +6,7 @@
 #include <Client/Widget/SlideShowWidget.h>
 #include <Client/Widget/CapturePublishWidget.h>
 #include "QsLog/QsLog.h"
+#include <Client/Settings.h>
 
 #ifndef VSC_FULLSCREEN
 #define VSC_FULLSCREEN false

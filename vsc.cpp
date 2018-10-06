@@ -4,6 +4,7 @@
 #include <Client/Client.h>
 #include <Client/Widget/MainWindow.h>
 #include "QsLog/QsLog.h"
+#include <Client/Settings.h>
 
 using namespace QsLogging;
 
