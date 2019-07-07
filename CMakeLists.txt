@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.7)
+cmake_minimum_required(VERSION 3.5)
 project(VenueShotClient)
 
 set(CMAKE_CXX_STANDARD 11)
@@ -67,20 +67,31 @@ target_link_libraries(vscLib Qt5::Widgets Qt5::Gui Qt5::Network Qt5::Multimedia 
 
 ################################################################################
 
-add_executable(vsc vsc.cpp)
-target_link_libraries(vsc vscLib)
+#add_executable(vsc vsc.cpp)
+#target_link_libraries(vsc vscLib)
+#
+#add_executable(display display.cpp)
+#target_link_libraries(display vscLib)
+#
+#add_executable(capture capture.cpp)
+#target_link_libraries(capture vscLib)
+#
+#add_executable(qmlDisplayModel qmlDisplayModel.cpp)
+#target_link_libraries(qmlDisplayModel vscLib)
+#
+#add_executable(qmlDisplayBridge qmlDisplayBridge.cpp)
+#target_link_libraries(qmlDisplayBridge vscLib)
+#
+#add_executable(qmlCapture qmlCapture.cpp)
+#target_link_libraries(qmlCapture vscLib)
 
-add_executable(display display.cpp)
-target_link_libraries(display vscLib)
+if(ANDROID)
+    add_library(qmlCapture SHARED qmlCapture.cpp)
+    target_link_libraries(qmlCapture vscLib)
 
-add_executable(capture capture.cpp)
-target_link_libraries(capture vscLib)
-
-add_executable(qmlDisplayModel qmlDisplayModel.cpp)
-target_link_libraries(qmlDisplayModel vscLib)
-
-add_executable(qmlDisplayBridge qmlDisplayBridge.cpp)
-target_link_libraries(qmlDisplayBridge vscLib)
-
-add_executable(qmlCapture qmlCapture.cpp)
-target_link_libraries(qmlCapture vscLib)
+    include(android/qt-android-cmake/AddQtAndroidApk.cmake)
+    add_qt_android_apk(qmlCapture_apk qmlCapture)
+else()
+    add_executable(qmlCapture qmlCapture.cpp)
+    target_link_libraries(qmlCapture vscLib)
+endif()
