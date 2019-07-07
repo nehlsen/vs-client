@@ -28,6 +28,8 @@ set(QSLOG
         QsLog/QsLogDestConsole.cpp
         QsLog/QsLogDestFile.cpp
         QsLog/QsLogDestFunctor.cpp
+        QsLog/QsLogLevel.cpp
+        QsLog/QsLogMessage.cpp
 )
 
 set(VSC_CORE

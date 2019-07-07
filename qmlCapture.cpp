@@ -7,6 +7,7 @@
 #include <Client/VenueShot.h>
 #include <QtCore/QTimer>
 #include "QsLog/QsLog.h"
+#include "QsLog/QsLogDest.h"
 
 #ifndef VSC_FULLSCREEN
 #define VSC_FULLSCREEN false
@@ -26,13 +27,13 @@ int main(int argc, char **argv)
     logger.setLoggingLevel(QsLogging::TraceLevel);
     const QString sLogPath(QDir(app.applicationDirPath()).filePath("vsc.log"));
 
-    DestinationPtr fileDestination(DestinationFactory::MakeFileDestination(
-            sLogPath, EnableLogRotation, MaxSizeBytes(1024*1024), MaxOldLogCount(2)));
-    logger.addDestination(fileDestination);
+    DestinationPtrU fileDestination(DestinationFactory::MakeFileDestination(
+            sLogPath, LogRotationOption::EnableLogRotation, MaxSizeBytes(1024*1024), MaxOldLogCount(2)));
+    logger.addDestination(std::move(fileDestination));
 
 #ifdef VSC_CLI_LOG
-    DestinationPtr debugDestination(DestinationFactory::MakeDebugOutputDestination());
-    logger.addDestination(debugDestination);
+    DestinationPtrU debugDestination(DestinationFactory::MakeDebugOutputDestination());
+    logger.addDestination(std::move(debugDestination));
 #endif
 
     // ------------------------------------------------------------------------------------------------
@@ -47,7 +48,5 @@ int main(int argc, char **argv)
         mainView.show();
     }
 
-    int exitCode = app.exec();
-    Logger::destroyInstance();
-    return exitCode;
+    return app.exec();
 }
