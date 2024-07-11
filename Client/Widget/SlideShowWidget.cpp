@@ -44,7 +44,7 @@ void SlideShowWidget::initLayout()
     reset();
 
     auto *layout = new QVBoxLayout();
-    layout->setMargin(0);
+    layout->setSpacing(0);
     layout->addWidget(m_pictureDisplay);
     setLayout(layout);
 }

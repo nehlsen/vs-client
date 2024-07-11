@@ -1,7 +1,8 @@
 #include "CapturePublishWidget.h"
 #include <QtMultimedia/QCamera>
-#include <QtMultimedia/QCameraImageCapture>
-#include <QtMultimediaWidgets/QCameraViewfinder>
+#include <QtMultimedia/QImageCapture>
+#include <QtMultimedia/QMediaCaptureSession>
+#include <QtMultimediaWidgets/QVideoWidget>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QLabel>
@@ -18,14 +19,7 @@ void CapturePublishWidget::onBtnCaptureClicked()
 {
     QLOG_TRACE() << "CapturePublishWidget::onBtnCaptureClicked()";
 
-//on half pressed shutter button
-    m_camera->searchAndLock();
-
-//on shutter button pressed
     m_cameraImageCapture->capture();
-
-//on shutter button released
-    m_camera->unlock();
 }
 
 void CapturePublishWidget::onImageSaved(int id, const QString &fileName)
@@ -45,20 +39,27 @@ void CapturePublishWidget::onImageCaptured(int id, const QImage &preview)
 
 void CapturePublishWidget::initPageCapture()
 {
+    m_captureSession = new QMediaCaptureSession();
     m_camera = new QCamera;
-    m_cameraViewfinder = new QCameraViewfinder();
-    m_camera->setViewfinder(m_cameraViewfinder);
-    m_cameraImageCapture = new QCameraImageCapture(m_camera);
-    m_cameraImageCapture->setCaptureDestination(QCameraImageCapture::CaptureToBuffer);
-    connect(m_cameraImageCapture, &QCameraImageCapture::imageSaved,
+    m_captureSession->setCamera(m_camera);
+
+    m_cameraViewfinder = new QVideoWidget();
+    m_captureSession->setVideoOutput(m_cameraViewfinder);
+
+    m_cameraImageCapture = new QImageCapture();
+    m_captureSession->setImageCapture(m_cameraImageCapture);
+
+    m_camera->start();
+
+    connect(m_cameraImageCapture, &QImageCapture::imageSaved,
             this, &CapturePublishWidget::onImageSaved);
-    connect(m_cameraImageCapture, &QCameraImageCapture::imageCaptured,
+    connect(m_cameraImageCapture, &QImageCapture::imageCaptured,
             this, &CapturePublishWidget::onImageCaptured);
-    m_camera->setCaptureMode(QCamera::CaptureStillImage);
 
     m_btnCapture = new QPushButton(this);
     m_btnCapture->setText(tr("Capture!"));
-    connect(m_btnCapture, &QPushButton::clicked, this, &CapturePublishWidget::onBtnCaptureClicked);
+    connect(m_btnCapture, &QPushButton::clicked,
+            this, &CapturePublishWidget::onBtnCaptureClicked);
 
     auto *layout = new QVBoxLayout();
     layout->addWidget(m_cameraViewfinder);

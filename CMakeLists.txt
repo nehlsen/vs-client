@@ -1,26 +1,19 @@
 cmake_minimum_required(VERSION 3.5)
-project(VenueShotClient)
+project(VenueShotClient VERSION 0.1 LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTOUIC ON)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+find_package(QT NAMES Qt6 REQUIRED COMPONENTS Widgets Gui Network Multimedia MultimediaWidgets Quick)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets Gui Network Multimedia MultimediaWidgets Quick)
 
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DVSC_CLI_LOG=1")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -DDEV_MODE_PREFIX=\"\" -DVSC_FULLSCREEN=1")
-
-find_package(Qt5Core)
-find_package(Qt5Widgets)
-find_package(Qt5Gui)
-find_package(Qt5Network)
-find_package(Qt5Multimedia)
-find_package(Qt5MultimediaWidgets)
-#find_package(Qt5SerialPort)
-#find_package(Qt5Sql)
-#find_package(Qt5Qml)
-find_package(Qt5Quick)
-#find_package(Qt5Charts)
 
 set(QSLOG
         QsLog/QsLog.cpp
@@ -28,8 +21,6 @@ set(QSLOG
         QsLog/QsLogDestConsole.cpp
         QsLog/QsLogDestFile.cpp
         QsLog/QsLogDestFunctor.cpp
-        QsLog/QsLogLevel.cpp
-        QsLog/QsLogMessage.cpp
 )
 
 set(VSC_CORE
@@ -64,17 +55,17 @@ set(VSC_QML
 
 set(VSC_SRC ${QSLOG} ${VSC_CORE} ${VSC_GUI} ${VSC_QML})
 
-add_library(vscLib STATIC ${VSC_SRC})
-target_link_libraries(vscLib Qt5::Widgets Qt5::Gui Qt5::Network Qt5::Multimedia Qt5::MultimediaWidgets Qt5::Quick)
+qt_add_library(vscLib STATIC ${VSC_SRC})
+target_link_libraries(vscLib Qt6::Widgets Qt6::Gui Qt6::Network Qt6::Multimedia Qt6::MultimediaWidgets Qt6::Quick)
 
 ################################################################################
 
-#add_executable(vsc vsc.cpp)
-#target_link_libraries(vsc vscLib)
-#
-#add_executable(display display.cpp)
-#target_link_libraries(display vscLib)
-#
+add_executable(vsc vsc.cpp)
+target_link_libraries(vsc vscLib)
+
+add_executable(display display.cpp)
+target_link_libraries(display vscLib)
+
 #add_executable(capture capture.cpp)
 #target_link_libraries(capture vscLib)
 #
@@ -87,13 +78,13 @@ target_link_libraries(vscLib Qt5::Widgets Qt5::Gui Qt5::Network Qt5::Multimedia 
 #add_executable(qmlCapture qmlCapture.cpp)
 #target_link_libraries(qmlCapture vscLib)
 
-if(ANDROID)
-    add_library(qmlCapture SHARED qmlCapture.cpp)
-    target_link_libraries(qmlCapture vscLib)
-
-    include(android/qt-android-cmake/AddQtAndroidApk.cmake)
-    add_qt_android_apk(qmlCapture_apk qmlCapture)
-else()
-    add_executable(qmlCapture qmlCapture.cpp)
-    target_link_libraries(qmlCapture vscLib)
-endif()
+#if(ANDROID)
+#    add_library(qmlCapture SHARED qmlCapture.cpp)
+#    target_link_libraries(qmlCapture vscLib)
+#
+#    include(android/qt-android-cmake/AddQtAndroidApk.cmake)
+#    add_qt_android_apk(qmlCapture_apk qmlCapture)
+#else()
+#    add_executable(qmlCapture qmlCapture.cpp)
+#    target_link_libraries(qmlCapture vscLib)
+#endif()

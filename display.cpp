@@ -7,6 +7,7 @@
 #include <Client/Widget/SlideShowWidget.h>
 #include <QtCore/QTimer>
 #include "QsLog/QsLog.h"
+#include "QsLog/QsLogDest.h"
 #include <Client/Settings.h>
 
 #ifndef VSC_FULLSCREEN
@@ -66,12 +67,12 @@ int main(int argc, char **argv)
     const QString sLogPath(QDir(app.applicationDirPath()).filePath("vsc.log"));
 
     DestinationPtr fileDestination(DestinationFactory::MakeFileDestination(
-            sLogPath, EnableLogRotation, MaxSizeBytes(1024*1024), MaxOldLogCount(2)));
-    logger.addDestination(fileDestination);
+            sLogPath, LogRotationOption::EnableLogRotation, MaxSizeBytes(1024*1024), MaxOldLogCount(2)));
+    logger.addDestination(std::move(fileDestination));
 
 #ifdef VSC_CLI_LOG
     DestinationPtr debugDestination(DestinationFactory::MakeDebugOutputDestination());
-    logger.addDestination(debugDestination);
+    logger.addDestination(std::move(debugDestination));
 #endif
 
     // ------------------------------------------------------------------------------------------------
@@ -86,7 +87,5 @@ int main(int argc, char **argv)
         slideShowWidget->show();
     }
 
-    int exitCode = app.exec();
-    Logger::destroyInstance();
-    return exitCode;
+    return app.exec();
 }

@@ -275,7 +275,7 @@ QNetworkRequest Client::addAuthHeader(QNetworkRequest request)
 QNetworkReply *Client::prepareReply(QNetworkReply *reply)
 {
     connect(reply, &QNetworkReply::finished, this, &Client::requestFinished);
-    connect(reply, static_cast<void(QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error),
+    connect(reply, &QNetworkReply::errorOccurred,
             this, &Client::requestError);
     connect(reply, &QNetworkReply::sslErrors, this, &Client::requestSslErrors);
 

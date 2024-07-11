@@ -3,9 +3,10 @@
 
 #include <QtWidgets/QStackedWidget>
 
+class QMediaCaptureSession;
 class QCamera;
-class QCameraViewfinder;
-class QCameraImageCapture;
+class QVideoWidget;
+class QImageCapture;
 class QPushButton;
 class QLabel;
 
@@ -29,9 +30,10 @@ protected slots:
 
 protected:
     void initPageCapture();
+    QMediaCaptureSession *m_captureSession;
     QCamera *m_camera;
-    QCameraViewfinder *m_cameraViewfinder;
-    QCameraImageCapture *m_cameraImageCapture;
+    QVideoWidget *m_cameraViewfinder;
+    QImageCapture *m_cameraImageCapture;
     QPushButton *m_btnCapture;
 
     void initPagePreviewPublish();
