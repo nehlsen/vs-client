@@ -29,11 +29,6 @@ QString VenueShot::serverStorage() const
     return m_client->serverStorage();
 }
 
-bool VenueShot::isTokenAutoRefreshEnabled() const
-{
-    return m_client->isTokenAutoRefreshEnabled();
-}
-
 Client::Status VenueShot::status() const
 {
     return m_client->status();
@@ -88,11 +83,6 @@ void VenueShot::setServerService(const QString &uri)
 void VenueShot::setServerStorage(const QString &uri)
 {
     m_client->setServerStorage(uri);
-}
-
-void VenueShot::setTokenAutoRefreshEnabled(bool enabled)
-{
-    m_client->setTokenAutoRefreshEnabled(enabled);
 }
 
 void VenueShot::acquireToken(const QString &username, const QString &password)

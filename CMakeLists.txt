@@ -25,15 +25,16 @@ set(QSLOG
 
 set(VSC_CORE
         Client/Client.cpp
-        Client/JwtToken.cpp
+        Client/KratosSessionToken.cpp
         Client/Settings.cpp
         Client/Api/BasicEndpoint.cpp
         Client/Api/Endpoint.cpp
-        Client/Api/AcquireToken.cpp
         Client/Api/GetVenue.cpp
         Client/Api/GetVenuePictures.cpp
         Client/Api/PostPicture.cpp
         Client/Api/LinkPicture.cpp
+        Client/Api/KratosStartFlow.cpp
+        Client/Api/KratosAuthenticate.cpp
         Client/Model/BasicEntity.cpp
         Client/Model/Venue.cpp
         Client/Model/VenuePicture.cpp

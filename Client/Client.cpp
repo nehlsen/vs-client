@@ -6,11 +6,20 @@
 
 Client::Client(QObject *parent):
     QObject(parent),
-    m_autoRefreshEnabled(true),
     m_venue(new Venue),
     m_venuePictures(new VenuePictures(this))
 {
     QLOG_TRACE() << "Client::Client";
+}
+
+void Client::setServerAuthentication(const QString &server)
+{
+    m_serverAuthentication = server;
+}
+
+QString Client::serverAuthentication() const
+{
+    return m_serverAuthentication;
 }
 
 void Client::setServerService(const QString &server)
@@ -33,16 +42,6 @@ QString Client::serverStorage() const
     return m_serverStorage;
 }
 
-void Client::setTokenAutoRefreshEnabled(bool enabled)
-{
-    m_autoRefreshEnabled = enabled;
-}
-
-bool Client::isTokenAutoRefreshEnabled() const
-{
-    return m_autoRefreshEnabled;
-}
-
 Client::Status Client::status() const
 {
     if (!token().isValid()) {
@@ -55,7 +54,7 @@ Client::Status Client::status() const
     return Ready;
 }
 
-JwtToken Client::token() const
+KratosSessionToken Client::token() const
 {
     return m_token;
 }
@@ -84,10 +83,22 @@ void Client::acquireToken(const QString &username, const QString &password)
 {
     QLOG_TRACE() << "Client::acquireToken";
 
-    m_endpointAcquireToken.setRequestParameters(serverService(), QStringList() << username << password);
-    QNetworkRequest request = m_endpointAcquireToken.createRequest();
-    request.setOriginatingObject(&m_endpointAcquireToken);
-    post(request, m_endpointAcquireToken.payload());
+    m_endpointKratosStartFlow.setRequestParameters(serverAuthentication(), QStringList());
+    QNetworkRequest request = m_endpointKratosStartFlow.createRequest();
+    request.setOriginatingObject(&m_endpointKratosStartFlow);
+    get(request); // FIXME the endpoint shall specify if we get or post
+
+    m_endpointKratosAuthenticate.setRequestParameters("not-needed", QStringList() << username << password);
+}
+
+void Client::continueAuthentication(const QString &actionUrl)
+{
+    QLOG_TRACE() << "Client::continueAuthentication";
+
+    m_endpointKratosAuthenticate.setRequestParameters(serverAuthentication(), m_endpointKratosAuthenticate.requestParameters() << actionUrl);
+    QNetworkRequest request = m_endpointKratosAuthenticate.createRequest();
+    request.setOriginatingObject(&m_endpointKratosAuthenticate);
+    post(request, m_endpointKratosAuthenticate.payload());
 }
 
 void Client::postPicture(const QImage &image)
@@ -155,9 +166,12 @@ void Client::requestFinished()
     }
 
     auto *origin = reply->request().originatingObject();
-    if (origin == dynamic_cast<QObject*>(&m_endpointAcquireToken)) {
-        m_endpointAcquireToken.parseResponse(reply);
-        setToken(m_endpointAcquireToken.token());
+    if (origin == dynamic_cast<QObject*>(&m_endpointKratosStartFlow)) {
+        m_endpointKratosStartFlow.parseResponse(reply);
+        continueAuthentication(m_endpointKratosStartFlow.actionUrl());
+    } else if (origin == dynamic_cast<QObject*>(&m_endpointKratosAuthenticate)) {
+        m_endpointKratosAuthenticate.parseResponse(reply);
+        m_endpointKratosAuthenticate.token();
     } else if (origin == dynamic_cast<QObject*>(&m_endpointGetVenue)) {
         m_endpointGetVenue.parseResponse(reply);
         setVenue(m_endpointGetVenue.venue());
@@ -191,7 +205,7 @@ void Client::requestSslErrors(const QList<QSslError> &errors)
     QLOG_TRACE() << "Client::requestSslErrors()";
 }
 
-void Client::setToken(const JwtToken &token)
+void Client::setToken(const KratosSessionToken &token)
 {
     m_token = token;
     emit tokenChanged(m_token);

@@ -6,6 +6,9 @@ void Settings::setDefaults()
 {
     QSettings settings;
 
+    if (!settings.contains("serverAuthentication")) {
+        settings.setValue("serverAuthentication", "http://authentication.my-server.com");
+    }
     if (!settings.contains("serverService")) {
         settings.setValue("serverService", "http://api.my-server.com");
     }

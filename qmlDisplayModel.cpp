@@ -23,6 +23,7 @@ Client* createClient()
     QSettings settings;
 
     auto *client = new Client();
+    client->setServerAuthentication(settings.value("serverAuthentication").toString());
     client->setServerService(settings.value("serverService").toString());
     client->setServerStorage(settings.value("serverStorage").toString());
     client->venuePictures()->setAutoFetchPicturesEnabled(settings.value("autoFetchEnabled").toBool());
@@ -48,7 +49,7 @@ int main(int argc, char **argv)
 {
     QApplication::setOrganizationName("nehlsen");
     QApplication::setOrganizationDomain("nehlsen.org");
-    QApplication::setApplicationName("VenueShotClient");
+    QApplication::setApplicationName("VenueShotClient2");
 
     QApplication app(argc, argv);
 

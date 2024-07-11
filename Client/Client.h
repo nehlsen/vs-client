@@ -5,12 +5,12 @@
 #include <QtCore/QUrl>
 #include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkReply>
-#include "JwtToken.h"
 #include <Client/Api/GetVenue.h>
 #include <Client/Api/GetVenuePictures.h>
-#include <Client/Api/AcquireToken.h>
 #include <Client/Api/PostPicture.h>
 #include <Client/Api/LinkPicture.h>
+#include <Client/Api/KratosStartFlow.h>
+#include <Client/Api/KratosAuthenticate.h>
 
 class VenuePictures;
 
@@ -29,18 +29,18 @@ public:
 
     explicit Client(QObject *parent = nullptr);
 
+    void setServerAuthentication(const QString &server);
+    QString serverAuthentication() const;
+
     void setServerService(const QString &server);
     QString serverService() const;
 
     void setServerStorage(const QString &server);
     QString serverStorage() const;
 
-    void setTokenAutoRefreshEnabled(bool enabled = true);
-    bool isTokenAutoRefreshEnabled() const;
-
     Status status() const;
 
-    JwtToken token() const;
+    KratosSessionToken token() const;
 
     void setVenue(const QString &venueToken);
     Venue *venue() const;
@@ -57,7 +57,7 @@ public slots:
      * @param password
      * @see tokenChanged
      */
-    void acquireToken(const QString &username, const QString &password);
+    void acquireToken(const QString &username, const QString &password); // FIXME rename to login
 
     void postPicture(const QImage &image);
     void linkPicture(const QString &publicPictureLocation);
@@ -69,7 +69,7 @@ public slots:
     void getVenuePictures(const QDateTime &createdAfter);
 
 signals:
-    void tokenChanged(const JwtToken &token);
+    void tokenChanged(const KratosSessionToken &token);
     void acquireTokenSucceed();
     void acquireTokenFailed();
 
@@ -86,12 +86,13 @@ protected slots:
     void requestSslErrors(const QList<QSslError> &errors);
 
 protected:
+    QString m_serverAuthentication;
     QString m_serverService;
     QString m_serverStorage;
 
-    bool m_autoRefreshEnabled;
-    JwtToken m_token;
-    void setToken(const JwtToken &token);
+    void continueAuthentication(const QString &actionUrl);
+    KratosSessionToken m_token;
+    void setToken(const KratosSessionToken &token);
 
     Venue *m_venue;
     void setVenue(Venue *venue);
@@ -99,7 +100,8 @@ protected:
 
     void updateStatus();
 
-    AcquireToken m_endpointAcquireToken;
+    KratosStartFlow m_endpointKratosStartFlow;
+    KratosAuthenticate m_endpointKratosAuthenticate;
     GetVenue m_endpointGetVenue;
     PostPicture m_endpointPostPicture;
     LinkPicture m_endpointLinkPicture;

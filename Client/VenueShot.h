@@ -13,7 +13,6 @@ Q_OBJECT
 // properties mirrored from client
 Q_PROPERTY(QString serverService READ serverService WRITE setServerService NOTIFY serverServiceChanged)
 Q_PROPERTY(QString serverStorage READ serverStorage WRITE setServerStorage NOTIFY serverStorageChanged)
-Q_PROPERTY(bool tokenAutoRefreshEnabled READ isTokenAutoRefreshEnabled WRITE setTokenAutoRefreshEnabled NOTIFY tokenAutoRefreshEnabledChanged)
 Q_PROPERTY(Client::Status status READ status /*WRITE setStatus*/ NOTIFY statusChanged)
 Q_PROPERTY(QString venueToken READ venueToken WRITE setVenueToken NOTIFY venueTokenChanged)
 Q_PROPERTY(Venue* venue READ venue WRITE setVenue NOTIFY venueChanged)
@@ -32,7 +31,6 @@ public:
 
     QString serverService() const;
     QString serverStorage() const;
-    bool isTokenAutoRefreshEnabled() const;
     Client::Status status() const;
     QString venueToken() const;
     Venue* venue() const;
@@ -48,7 +46,6 @@ public:
 public slots:
     void setServerService(const QString &uri);
     void setServerStorage(const QString &uri);
-    void setTokenAutoRefreshEnabled(bool enabled);
     void acquireToken(const QString &username, const QString &password);
     void postPicture(const QImage &image);
     void postPicture(const QString &imageUri);
@@ -67,7 +64,6 @@ public slots:
 signals:
     void serverServiceChanged();
     void serverStorageChanged();
-    void tokenAutoRefreshEnabledChanged();
     void statusChanged(Client::Status newStatus);
     void venueTokenChanged();
     void venueChanged();

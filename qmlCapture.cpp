@@ -19,7 +19,7 @@ int main(int argc, char **argv)
 {
     QApplication::setOrganizationName("nehlsen");
     QApplication::setOrganizationDomain("nehlsen.org");
-    QApplication::setApplicationName("VenueShotClient");
+    QApplication::setApplicationName("VenueShotClient2");
 
     QApplication app(argc, argv);
 
