@@ -133,7 +133,7 @@ void Client::getVenuePictures()
         return;
     }
 
-    m_endpointGetVenuePictures.setRequestParameters(serverService(), QStringList() << venue()->token());
+    m_endpointGetVenuePictures.setRequestParameters(serverService(), QStringList() << venue()->id());
     QNetworkRequest request = m_endpointGetVenuePictures.createRequest();
     request.setOriginatingObject(&m_endpointGetVenuePictures);
     get(addAuthHeader(request));
@@ -171,7 +171,7 @@ void Client::requestFinished()
         continueAuthentication(m_endpointKratosStartFlow.actionUrl());
     } else if (origin == dynamic_cast<QObject*>(&m_endpointKratosAuthenticate)) {
         m_endpointKratosAuthenticate.parseResponse(reply);
-        m_endpointKratosAuthenticate.token();
+        setToken(m_endpointKratosAuthenticate.token());
     } else if (origin == dynamic_cast<QObject*>(&m_endpointGetVenue)) {
         m_endpointGetVenue.parseResponse(reply);
         setVenue(m_endpointGetVenue.venue());

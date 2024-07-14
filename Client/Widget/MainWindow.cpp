@@ -67,6 +67,7 @@ void MainWindow::loadSettings()
     Settings::setDefaults();
 
     QSettings settings;
+    m_client->setServerAuthentication(settings.value("serverAuthentication").toString());
     m_client->setServerService(settings.value("serverService").toString());
     m_client->setServerStorage(settings.value("serverStorage").toString());
     m_client->venuePictures()->setAutoFetchPicturesEnabled(settings.value("autoFetchEnabled").toBool());

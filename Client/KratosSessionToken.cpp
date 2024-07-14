@@ -13,12 +13,26 @@ QDateTime KratosSessionToken::expiresAt() const
 
 bool KratosSessionToken::isValid() const
 {
-    return !token().isEmpty() && expiresAt().isValid() && !isLifetimeExpired();
+    if (token().isEmpty()) {
+        return false;
+    }
+    if (!expiresAt().isValid()) {
+        return false;
+    }
+    if (isLifetimeExpired()) {
+        return false;
+    }
+
+    return true;
 }
 
 bool KratosSessionToken::isLifetimeExpired() const
 {
-    return !expiresAt().isValid() || expiresAt().secsTo(QDateTime::currentDateTime()) < 1;
+    if (!expiresAt().isValid()) {
+        return true;
+    }
+
+    return QDateTime::currentDateTime().secsTo(expiresAt()) < 1;
 }
 
 KratosSessionToken KratosSessionToken::fromJsonObject(const QJsonObject &jsonObject)
@@ -42,8 +56,8 @@ KratosSessionToken KratosSessionToken::fromJsonObject(const QJsonObject &jsonObj
         return token;
     }
     
-    token.m_token = jsonObject.value(QLatin1String("token")).toString();
-    token.m_expiresAt = QDateTime::fromString(session.value(QLatin1String("expires_at")).toString());
-    
+    token.m_token = jsonObject.value(QLatin1String("session_token")).toString();
+    token.m_expiresAt = QDateTime::fromString(session.value(QLatin1String("expires_at")).toString(), Qt::ISODateWithMs);
+
     return token;
 }
