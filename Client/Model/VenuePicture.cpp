@@ -28,12 +28,12 @@ VenuePicture* VenuePicture::fromJsonObject(const QJsonObject &jsonObject)
 
     auto picture = new VenuePicture;
 
-    if (!jsonObject.contains(QLatin1String("uri"))) {
-        QLOG_ERROR() << "missing uri element";
+    if (!jsonObject.contains(QLatin1String("publicUrl"))) {
+        QLOG_ERROR() << "VenuePicture::fromJsonObject(): missing publicUrl element";
         return picture;
     }
 
-    picture->m_uri = jsonObject.value(QLatin1String("uri")).toString();
+    picture->m_uri = jsonObject.value(QLatin1String("publicUrl")).toString();
 //    QLOG_TRACE() << "\t" << picture.m_uri;
     picture->readBasicAttributes(jsonObject);
 

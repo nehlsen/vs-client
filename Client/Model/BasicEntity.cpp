@@ -34,6 +34,7 @@ QString BasicEntity::updateBy() const
 
 void BasicEntity::readBasicAttributes(const QJsonObject &jsonObject)
 {
+    // FIXME where is it used?
     if (jsonObject.contains(QLatin1String("start_at"))) {
         m_startAt = QDateTime::fromString(jsonObject.value(QLatin1String("start_at")).toString(), Qt::ISODate);
     }

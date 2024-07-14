@@ -3,9 +3,10 @@
 #include <QtGui/QImage>
 #include <QsLog/QsLog.h>
 #include <QtNetwork/QNetworkReply>
+#include <QtCore/QJsonObject>
 
-#define POST_PICTURE_URL DEV_MODE_PREFIX "/v1/pictures.json"
-#define POST_FORM_FIELD_NAME "picture[file][file]"
+#define POST_PICTURE_URL ""
+#define POST_FORM_FIELD_NAME "file"
 
 PostPicture::PostPicture() :
     m_payload(nullptr)
@@ -14,6 +15,7 @@ PostPicture::PostPicture() :
 
 QNetworkRequest PostPicture::createRequest()
 {
+    // FIXME replace server with pictureServiceServer - like with service and auth
     QNetworkRequest request(QUrl(server() + POST_PICTURE_URL));
     // FIXME add content header?
 
@@ -53,24 +55,20 @@ QHttpMultiPart *PostPicture::payload(const QImage &image)
     return m_payload;
 }
 
-bool PostPicture::parseResponse(QNetworkReply *reply)
+bool PostPicture::handleJsonDocument(const QJsonDocument &document)
 {
     m_publicLocation.clear();
 
-    // using basic endpoint for initial parsing and debug output (but ignore return value)
-    BasicEndpoint::parseResponse(reply);
-
-    if (reply->hasRawHeader("X-Public-Location")) {
-        m_publicLocation = QString::fromLatin1(reply->rawHeader("X-Public-Location"));
-        return true;
+    const QJsonObject &jsonObject = document.object();
+    
+    if (!jsonObject.contains(QLatin1String("id"))) {
+        QLOG_ERROR() << "PostPicture::handleJsonDocument(): missing id";
+        return false;
     }
 
-    return false;
-}
+    m_publicLocation = server() + POST_PICTURE_URL + jsonObject.value("id").toString();
 
-bool PostPicture::parseResponse(int httpStatusCode, const QByteArray &responseBody)
-{
-    return false;
+    return true;
 }
 
 QString PostPicture::publicLocation() const

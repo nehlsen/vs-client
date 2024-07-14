@@ -2,7 +2,7 @@
 #include <QsLog/QsLog.h>
 #include "LinkPicture.h"
 
-#define LINK_PICTURE_URL DEV_MODE_PREFIX "/v1/venues/%1/pictures.json"
+#define LINK_PICTURE_URL "%1/picture/"
 
 QNetworkRequest LinkPicture::createRequest()
 {
@@ -14,11 +14,8 @@ QNetworkRequest LinkPicture::createRequest()
 
 QJsonDocument LinkPicture::payload()
 {
-    QJsonObject field;
-    field["uri"] = requestParameters().at(1);
-
     QJsonObject payload;
-    payload["picture"] = field;
+    payload["url"] = requestParameters().at(1);
 
     return QJsonDocument(payload);
 }

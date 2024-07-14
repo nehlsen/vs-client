@@ -8,6 +8,8 @@
 
 using namespace QsLogging;
 
+// FIXME this is unused
+// FIXME build something to load config from settings into the client - reduce code duplication
 Client* createClient()
 {
     Settings::setDefaults();

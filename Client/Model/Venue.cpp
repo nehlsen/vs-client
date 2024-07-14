@@ -1,6 +1,11 @@
 #include "Venue.h"
 #include <QsLog/QsLog.h>
 
+QString Venue::id() const
+{
+    return m_id;
+}
+
 QString Venue::token() const
 {
     return m_token;
@@ -27,30 +32,28 @@ Venue* Venue::fromJsonObject(const QJsonObject &jsonObject)
 
     auto venue = new Venue;
 
-//    if (!jsonObject.contains(QLatin1String("venue"))) {
-//        QLOG_ERROR() << "missing venue root element";
-//        return venue;
-//    }
-//    const QJsonObject &jsonRoot = jsonObject.value(QLatin1String("venue")).toObject();
-    const QJsonObject &jsonRoot = jsonObject;
-
-    if (!jsonRoot.contains(QLatin1String("token"))) {
-        QLOG_ERROR() << "missing token";
+    if (!jsonObject.contains(QLatin1String("id"))) {
+        QLOG_ERROR() << "Venue::fromJsonObject(): missing id";
         return venue;
     }
-    if (!jsonRoot.contains(QLatin1String("name"))) {
-        QLOG_ERROR() << "missing name";
+    if (!jsonObject.contains(QLatin1String("token"))) {
+        QLOG_ERROR() << "Venue::fromJsonObject(): missing token";
+        return venue;
+    }
+    if (!jsonObject.contains(QLatin1String("name"))) {
+        QLOG_ERROR() << "Venue::fromJsonObject(): missing name";
         return venue;
     }
 
-    venue->m_token = jsonRoot.value(QLatin1String("token")).toString();
-    venue->m_name = jsonRoot.value(QLatin1String("name")).toString();
+    venue->m_id = jsonObject.value(QLatin1String("id")).toString();
+    venue->m_token = jsonObject.value(QLatin1String("token")).toString();
+    venue->m_name = jsonObject.value(QLatin1String("name")).toString();
 
-    if (jsonRoot.contains(QLatin1String("description"))) {
-        venue->m_description = jsonRoot.value(QLatin1String("description")).toString();
+    if (jsonObject.contains(QLatin1String("description"))) {
+        venue->m_description = jsonObject.value(QLatin1String("description")).toString();
     }
 
-    venue->readBasicAttributes(jsonRoot);
+    venue->readBasicAttributes(jsonObject);
 
     return venue;
 }

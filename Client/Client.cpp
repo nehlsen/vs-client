@@ -116,7 +116,7 @@ void Client::linkPicture(const QString &publicPictureLocation)
     QLOG_TRACE() << "Client::linkPicture(" << publicPictureLocation << ")";
 
     QStringList parameters;
-    parameters << venue()->token()
+    parameters << venue()->id()
                << publicPictureLocation;
 
     m_endpointLinkPicture.setRequestParameters(serverService(), parameters);
@@ -177,6 +177,7 @@ void Client::requestFinished()
         setVenue(m_endpointGetVenue.venue());
     } else if (origin == dynamic_cast<QObject*>(&m_endpointPostPicture)) {
         m_endpointPostPicture.parseResponse(reply);
+        // FIXME check if response is 2xx before continuing
         emit pictureUploaded(m_endpointPostPicture.publicLocation());
         linkPicture(m_endpointPostPicture.publicLocation());
     } else if (origin == dynamic_cast<QObject*>(&m_endpointLinkPicture)) {

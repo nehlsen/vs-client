@@ -195,7 +195,9 @@ bool VenuePictures::startNextDownload()
         QTimer::singleShot(100, this, &VenuePictures::startNextDownload);
     }
 
-    m_nam.get(QNetworkRequest(picture->uri()));
+    QNetworkRequest request = QNetworkRequest(picture->uri());
+    request.setRawHeader("Authorization", QString("Bearer %1").arg(m_client->token().token()).toUtf8());
+    m_nam.get(request);
     m_hasActiveDownload = true;
 
     QLOG_INFO() << "VenuePictures::startNextDownload, download started:" << picture->uri();

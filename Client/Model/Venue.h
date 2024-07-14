@@ -9,6 +9,7 @@ class Venue : public BasicEntity
 Q_OBJECT
 
 public:
+    QString id() const;
     QString token() const;
     QString name() const;
     QString description() const;
@@ -18,6 +19,7 @@ public:
     static Venue* fromJsonObject(const QJsonObject &jsonObject);
 
 protected:
+    QString m_id;
     QString m_token;
     QString m_name;
     QString m_description;

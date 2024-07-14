@@ -2,11 +2,11 @@
 #define VSC_POSTPICTURE_H
 
 #include <QtCore/QBuffer>
-#include "BasicEndpoint.h"
+#include "Endpoint.h"
 
 class QHttpMultiPart;
 
-class PostPicture : public BasicEndpoint
+class PostPicture : public Endpoint
 {
 public:
     PostPicture();
@@ -14,12 +14,11 @@ public:
     QNetworkRequest createRequest() override;
     QHttpMultiPart *payload(const QImage &image);
 
-    bool parseResponse(QNetworkReply *reply) override;
-    bool parseResponse(int httpStatusCode, const QByteArray &responseBody) override;
-
     QString publicLocation() const;
 
 protected:
+    bool handleJsonDocument(const QJsonDocument &document) override;
+
     QByteArray m_bufferBytes;
     QBuffer m_bufferDevice;
     QHttpMultiPart *m_payload;
