@@ -167,11 +167,19 @@ void Client::requestFinished()
 
     auto *origin = reply->request().originatingObject();
     if (origin == dynamic_cast<QObject*>(&m_endpointKratosStartFlow)) {
-        m_endpointKratosStartFlow.parseResponse(reply);
-        continueAuthentication(m_endpointKratosStartFlow.actionUrl());
+        if (m_endpointKratosStartFlow.parseResponse(reply)) {
+            continueAuthentication(m_endpointKratosStartFlow.actionUrl());
+        } else {
+            QLOG_ERROR() << "Client::requestFinished(), failed to start authentication flow!";
+            updateStatus();
+        }
     } else if (origin == dynamic_cast<QObject*>(&m_endpointKratosAuthenticate)) {
-        m_endpointKratosAuthenticate.parseResponse(reply);
-        setToken(m_endpointKratosAuthenticate.token());
+        if (m_endpointKratosAuthenticate.parseResponse(reply)) {
+            setToken(m_endpointKratosAuthenticate.token());
+        } else {
+            QLOG_ERROR() << "Client::requestFinished(), failed to complete authentication flow!";
+            updateStatus();
+        }
     } else if (origin == dynamic_cast<QObject*>(&m_endpointGetVenue)) {
         m_endpointGetVenue.parseResponse(reply);
         setVenue(m_endpointGetVenue.venue());
