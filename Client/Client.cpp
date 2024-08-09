@@ -232,7 +232,14 @@ void Client::setVenue(Venue *venue)
 
 void Client::updateStatus()
 {
-    QLOG_TRACE() << "Client::updateStatus()" << status();
+    QString statusMessage = "?";
+    switch (status()) {
+        case Status::Offline: statusMessage = "Offline"; break;
+        case Status::Online: statusMessage = "Online"; break;
+        case Status::Ready: statusMessage = "Ready"; break;
+        case Status::Error: statusMessage = "Error"; break;
+    }
+    QLOG_TRACE() << "Client::updateStatus()" << statusMessage << "(" << status() << ")";
 
     emit statusChanged(status());
 }
