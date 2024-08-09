@@ -2,7 +2,6 @@
 #include <QtCore/QDir>
 #include <QtQuick/QQuickView>
 #include <QtQml/QQmlContext>
-#include <Client/Client.h>
 #include <Client/Widget/SlideShowWidget.h>
 #include <Client/VenueShot.h>
 #include <QtCore/QTimer>
@@ -27,12 +26,12 @@ int main(int argc, char **argv)
     logger.setLoggingLevel(QsLogging::TraceLevel);
     const QString sLogPath(QDir(app.applicationDirPath()).filePath("vsc.log"));
 
-    DestinationPtrU fileDestination(DestinationFactory::MakeFileDestination(
+    DestinationPtr fileDestination(DestinationFactory::MakeFileDestination(
             sLogPath, LogRotationOption::EnableLogRotation, MaxSizeBytes(1024*1024), MaxOldLogCount(2)));
     logger.addDestination(std::move(fileDestination));
 
 #ifdef VSC_CLI_LOG
-    DestinationPtrU debugDestination(DestinationFactory::MakeDebugOutputDestination());
+    DestinationPtr debugDestination(DestinationFactory::MakeDebugOutputDestination());
     logger.addDestination(std::move(debugDestination));
 #endif
 
