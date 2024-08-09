@@ -38,5 +38,6 @@ Rectangle {
 
         img.source = venuePicture.localPath
         infoAuthor.text = venuePicture.createdBy
+        imgInfo.visible = !!venuePicture.createdBy
     }
 }
