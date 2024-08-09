@@ -11,6 +11,7 @@ class VenueShot : public QObject
 {
 Q_OBJECT
 // properties mirrored from client
+Q_PROPERTY(QString serverAuthentication READ serverAuthentication WRITE setServerAuthentication NOTIFY serverAuthenticationChanged)
 Q_PROPERTY(QString serverService READ serverService WRITE setServerService NOTIFY serverServiceChanged)
 Q_PROPERTY(QString serverStorage READ serverStorage WRITE setServerStorage NOTIFY serverStorageChanged)
 Q_PROPERTY(Client::Status status READ status /*WRITE setStatus*/ NOTIFY statusChanged)
@@ -29,6 +30,7 @@ public:
     static void declareQml();
     explicit VenueShot(QObject *parent = nullptr);
 
+    QString serverAuthentication() const;
     QString serverService() const;
     QString serverStorage() const;
     Client::Status status() const;
@@ -44,6 +46,7 @@ public:
     VenuePicture* currentPicture() const;
 
 public slots:
+    void setServerAuthentication(const QString &uri);
     void setServerService(const QString &uri);
     void setServerStorage(const QString &uri);
     void acquireToken(const QString &username, const QString &password);
@@ -62,6 +65,7 @@ public slots:
 //    void setCurrentPicture();
 
 signals:
+    void serverAuthenticationChanged();
     void serverServiceChanged();
     void serverStorageChanged();
     void statusChanged(Client::Status newStatus);

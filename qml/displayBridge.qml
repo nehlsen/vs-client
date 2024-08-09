@@ -1,5 +1,5 @@
 import QtQuick 2.7
-import Qt.labs.settings 1.0
+import QtCore
 import org.nehlsen.vs 1.0
 import org.nehlsen.vs.client 1.0
 import "./" as VsModules
@@ -12,13 +12,14 @@ Rectangle {
 
     Settings {
         id: settings
+        property alias serverAuthentication: vs.serverAuthentication
         property alias serverService: vs.serverService
         property alias serverStorage: vs.serverStorage
         property string username: "my-username"
         property string password: "my-password"
         property string venue: "my-venue-token"
-//        property int autoUpdateInterval: vs.autoUpdateInterval
-        property int autoUpdateInterval: 10
+       property int autoUpdateInterval: vs.autoUpdateInterval
+        // property int autoUpdateInterval: 10
         property alias cacheFolder: vs.cacheFolder
         property alias slideShowInterval: vs.interval
     }

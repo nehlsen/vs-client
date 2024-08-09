@@ -19,6 +19,11 @@ VenueShot::VenueShot(QObject *parent) :
     connect(m_slideShow, &SlideShow::showPicture, this, &VenueShot::currentPictureChanged);
 }
 
+QString VenueShot::serverAuthentication() const
+{
+    return m_client->serverAuthentication();
+}
+
 QString VenueShot::serverService() const
 {
     return m_client->serverService();
@@ -73,6 +78,11 @@ VenuePicture *VenueShot::currentPicture() const
 {
 //    return new VenuePicture; // FIXME
     return m_slideShow->currentPicture();
+}
+
+void VenueShot::setServerAuthentication(const QString &uri)
+{
+    m_client->setServerAuthentication(uri);
 }
 
 void VenueShot::setServerService(const QString &uri)
