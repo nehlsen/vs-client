@@ -20,6 +20,8 @@ SlideShow::SlideShow(Client *client) :
 
 void SlideShow::setInterval(int msec)
 {
+    QLOG_TRACE() << "SlideShow::setInterval(" << msec << "msec)";
+
     m_delayAdvancePicture->start(qMax(msec, 1000));
 }
 
@@ -72,6 +74,8 @@ void SlideShow::advancePicture()
         return;
     }
 
+    const int oldIndex = m_picturesCurrentIndex;
+
     if (m_picturesCurrentIndex < 0) {
         m_picturesCurrentIndex = 0;
     } else {
@@ -80,6 +84,11 @@ void SlideShow::advancePicture()
 
     if (m_picturesCurrentIndex >= m_pictures.count()) {
         m_picturesCurrentIndex = 0;
+    }
+
+    if (m_picturesCurrentIndex == oldIndex) {
+        QLOG_WARN() << "Slideshow::advancePicture(), index unchanged. bailing ...";
+        return;
     }
 
     QLOG_INFO() << "Slideshow::advancePicture(), index:" << m_picturesCurrentIndex;
