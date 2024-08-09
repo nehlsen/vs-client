@@ -67,15 +67,15 @@ target_link_libraries(vsc vscLib)
 add_executable(display display.cpp)
 target_link_libraries(display vscLib)
 
-#add_executable(capture capture.cpp)
-#target_link_libraries(capture vscLib)
-#
+add_executable(capture capture.cpp)
+target_link_libraries(capture vscLib)
+
 #add_executable(qmlDisplayModel qmlDisplayModel.cpp)
 #target_link_libraries(qmlDisplayModel vscLib)
-#
-#add_executable(qmlDisplayBridge qmlDisplayBridge.cpp)
-#target_link_libraries(qmlDisplayBridge vscLib)
-#
+
+add_executable(qmlDisplayBridge qmlDisplayBridge.cpp)
+target_link_libraries(qmlDisplayBridge vscLib)
+
 #add_executable(qmlCapture qmlCapture.cpp)
 #target_link_libraries(qmlCapture vscLib)
 
